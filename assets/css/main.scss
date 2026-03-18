@@ -1,31 +1,8 @@
 ---
 ---
 
-/* 레이아웃 너비 변수 오버라이드 */
-$max-width: 1600px;
-$x-large: 1600px;
-
 /* 소라색 (연한 보라-파랑) 테마 */
 $primary-color: #C4BCF5;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
-
-/* ── 전체 컨테이너 ── */
-#main {
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1em;
-  padding-right: 1em;
-}
-
-/* ── 왼쪽 작성자 사이드바: 고정 해제 ── */
-.sidebar.sticky {
-  position: static !important;
-}
-
-/* ── 홈/아카이브 페이지 ── */
-.archive {
-  max-width: 100%;
-}
