@@ -11,7 +11,18 @@ $x-large: 1400px;
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-/* ── 토글 버튼 (우측 상단 작게) ── */
+/* ── 프로필 사진 크기 확대 ── */
+.author__avatar img {
+  max-width: 140px;
+  border-radius: 50%;
+}
+
+.author__avatar {
+  width: 140px;
+  height: 140px;
+}
+
+/* ── 사이드바 토글 버튼 ── */
 .sidebar-toggle {
   position: absolute;
   top: 4px;
@@ -36,18 +47,16 @@ $x-large: 1400px;
   color: #fff;
 }
 
-/* ── 사이드바 sticky 유지 ── */
+/* ── 사이드바 sticky ── */
 .sidebar.sticky {
   position: sticky;
   top: 2em;
 }
 
-/* ── 사이드바 콘텐츠 ── */
 .sidebar-content {
   transition: opacity 0.3s ease;
 }
 
-/* ── 접힌 상태 ── */
 .sidebar.sticky.collapsed .sidebar-content {
   display: none;
 }
@@ -56,14 +65,13 @@ $x-large: 1400px;
   position: static;
 }
 
-/* ── 모바일 대응 ── */
 @media (max-width: 768px) {
   .sidebar-toggle {
     display: none;
   }
 }
 
-/* ── 다크모드 토글 버튼 (네비게이션 바) ── */
+/* ── 다크모드 토글 버튼 ── */
 .theme-toggle {
   background: none;
   border: none;
@@ -79,105 +87,205 @@ $x-large: 1400px;
   transform: scale(1.2);
 }
 
-/* ── 다크모드 색상 ── */
-body.dark-mode {
-  background-color: #1a1a2e;
-  color: #e0e0e0;
+/* ══════════════════════════════════════════
+   다크모드 (html.dark-mode)
+   ══════════════════════════════════════════ */
+html.dark-mode {
+  body {
+    background-color: #181a1b;
+    color: #d4d4d4;
+  }
 
+  /* 네비게이션 */
   .masthead {
-    background-color: #16213e;
-    border-bottom-color: #0f3460;
+    background-color: #1e2021;
+    border-bottom: 1px solid #333;
   }
 
   .greedy-nav {
-    background: #16213e;
+    background: #1e2021;
 
     a {
-      color: #e0e0e0;
-
-      &:hover {
-        color: $primary-color;
-      }
+      color: #d4d4d4;
+      &:hover { color: $primary-color; }
     }
+
+    .search__toggle {
+      color: #d4d4d4;
+    }
+  }
+
+  /* 사이드바 */
+  .sidebar {
+    background-color: transparent;
+    color: #d4d4d4;
+
+    a { color: #bbb; }
+    a:hover { color: $primary-color; }
+  }
+
+  .author__name a { color: #d4d4d4; }
+  .author__bio { color: #aaa; }
+
+  .sidebar-toggle {
+    border-color: rgba($primary-color, 0.6);
+    color: $primary-color;
+    &:hover {
+      background: $primary-color;
+      color: #181a1b;
+    }
+  }
+
+  .btn--inverse {
+    background-color: #333;
+    color: #d4d4d4;
+    border-color: #555;
+  }
+
+  /* 콘텐츠 영역 */
+  .page__title a,
+  .page__title {
+    color: #e8e8e8;
   }
 
   .page__content {
-    a {
-      color: lighten($primary-color, 10%);
-    }
-  }
+    color: #d4d4d4;
 
-  .sidebar.sticky {
-    background-color: #16213e;
-    color: #e0e0e0;
+    a { color: lighten($primary-color, 8%); }
 
-    a {
+    h2, h3, h4, h5, h6 {
       color: #e0e0e0;
+      border-bottom-color: #333;
     }
+
+    blockquote {
+      border-left-color: $primary-color;
+      color: #bbb;
+    }
+
+    table {
+      th {
+        background-color: #252525;
+        color: #d4d4d4;
+        border-color: #444;
+      }
+      td {
+        border-color: #333;
+        color: #ccc;
+      }
+    }
+
+    hr { border-color: #333; }
   }
 
-  .page__title,
-  .page__meta,
-  .page__content,
-  .archive__item-title {
-    color: #e0e0e0;
+  .page__meta {
+    color: #888;
   }
 
-  .page__footer {
-    background-color: #0f3460;
-    color: #ccc;
+  .archive__item-title a {
+    color: #d4d4d4;
+    &:hover { color: $primary-color; }
   }
 
+  .archive__item-excerpt {
+    color: #aaa;
+  }
+
+  /* 코드 블록 */
   pre, code {
     background-color: #0d1117;
     color: #c9d1d9;
+    border-color: #333;
   }
 
-  table {
-    th {
-      background-color: #16213e;
-      color: #e0e0e0;
+  div.highlighter-rouge,
+  figure.highlight {
+    background-color: #0d1117;
+    border-color: #333;
+  }
+
+  td.gutter {
+    color: #555;
+    border-right-color: #333;
+  }
+
+  /* TOC */
+  .toc {
+    background-color: #1e2021;
+    border-color: #333;
+
+    .nav__title {
+      background: #252525;
+      color: #d4d4d4;
     }
-    td {
-      border-color: #333;
-    }
+
+    a { color: #bbb; }
+    a:hover { color: $primary-color; }
+  }
+
+  /* notice 박스 */
+  .notice,
+  .notice--primary {
+    background-color: #1e2021;
+    color: #d4d4d4;
   }
 
   .notice--warning {
-    background-color: #2a2000;
-    color: #ffd700;
+    background-color: #2a2200;
+    color: #e8c300;
+    border-left-color: #e8c300;
   }
 
-  .toc {
-    background-color: #16213e;
-    border-color: #333;
-
-    a {
-      color: #ccc;
-    }
+  .notice--info {
+    background-color: #0a1929;
+    color: #6cb4ee;
   }
 
-  .nav__title {
-    background: #0f3460;
-    color: #e0e0e0;
+  .notice--success {
+    background-color: #0a2910;
+    color: #5cb85c;
   }
 
-  .sidebar-toggle {
-    border-color: $primary-color;
-    color: $primary-color;
-
-    &:hover {
-      background: $primary-color;
-      color: #1a1a2e;
-    }
+  .notice--danger {
+    background-color: #2a0a0a;
+    color: #d9534f;
   }
 
+  /* 푸터 */
+  .page__footer {
+    background-color: #1e2021;
+    color: #888;
+    border-top-color: #333;
+
+    a { color: #bbb; }
+  }
+
+  /* 검색 */
   .search-content {
-    background-color: #1a1a2e;
+    background-color: #181a1b;
 
     .search-input {
-      background-color: #16213e;
-      color: #e0e0e0;
+      background-color: #1e2021;
+      color: #d4d4d4;
+      border-color: #444;
     }
+  }
+
+  /* 페이지네이션 */
+  .pagination a,
+  .pagination span {
+    color: #bbb;
+    border-color: #333;
+  }
+
+  .pagination a:hover {
+    color: $primary-color;
+  }
+
+  /* 입력 필드 */
+  input, textarea, select {
+    background-color: #1e2021;
+    color: #d4d4d4;
+    border-color: #444;
   }
 }
