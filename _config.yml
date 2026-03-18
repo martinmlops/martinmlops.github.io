@@ -2,7 +2,7 @@
 # 사이트 기본 정보
 # ──────────────────────────────────────────────
 title: "Tech Blog"
-subtitle: "Azure, Kubernetes, Cloud Infrastructure"
+subtitle: "Azure, Kubernetes, Cloud Infrastructure<br>DevOps, Full stack Engineering"
 description: "Azure, Kubernetes, Network, Security 등 클라우드 인프라 기술 블로그"
 url: "https://martinmlops.github.io"
 baseurl: ""
@@ -36,9 +36,9 @@ after_footer_scripts:
 # 저자 정보
 # ──────────────────────────────────────────────
 author:
-  name: "martinmlops"
+  name: "Martin"
   avatar: "/assets/images/profile.jpg"
-  bio: "Cloud & Infrastructure Engineer"
+  bio: "Solutions Architect"
   location: "South Korea"
   links:
     - label: "GitHub"
