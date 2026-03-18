@@ -30,6 +30,7 @@ after_footer_scripts:
   - /assets/js/mermaid-init.js
   - /assets/js/sidebar-toggle.js
   - /assets/js/theme-toggle.js
+  - /assets/js/permalink-fix.js
 
 # ──────────────────────────────────────────────
 # 저자 정보
