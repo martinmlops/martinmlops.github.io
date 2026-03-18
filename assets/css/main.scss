@@ -5,6 +5,9 @@
 $max-width: 1400px;
 $x-large: 1440px;
 
+/* 소라색 (연한 보라-파랑) 테마 */
+$primary-color: #7B68EE;
+
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
