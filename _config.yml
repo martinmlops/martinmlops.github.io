@@ -1,0 +1,131 @@
+# ──────────────────────────────────────────────
+# 사이트 기본 정보
+# ──────────────────────────────────────────────
+title: "Tech Blog"
+tagline: "Azure, Kubernetes, Cloud Infrastructure"
+description: "Azure, Kubernetes, Network, Security 등 클라우드 인프라 기술 블로그"
+url: "https://martinmlops.github.io"
+baseurl: ""
+lang: ko-KR
+timezone: Asia/Seoul
+
+# ──────────────────────────────────────────────
+# 테마 설정
+# ──────────────────────────────────────────────
+theme: jekyll-theme-chirpy
+
+# ──────────────────────────────────────────────
+# 기능 설정
+# ──────────────────────────────────────────────
+toc: true
+
+# 수식 (MathJax)
+math: true
+
+# 다이어그램 (Mermaid)
+mermaid: true
+
+# ──────────────────────────────────────────────
+# 댓글 시스템 (Giscus)
+# ──────────────────────────────────────────────
+comments:
+  # Global switch for the post-comment system. Keeping it empty means disabled.
+  provider: giscus       # [disqus | utterances | giscus]
+  giscus:
+    repo: "martinmlops/martinmlops.github.io"
+    repo_id: ""          # GitHub repo ID (placeholder - https://giscus.app 에서 확인)
+    category: "Comments"
+    category_id: ""      # GitHub category ID (placeholder - https://giscus.app 에서 확인)
+    mapping: "pathname"  # optional, default to 'pathname'
+    strict: "0"          # optional, default to '0'
+    input_position: "bottom"  # optional, default to 'bottom'
+    lang: "ko"           # optional, default to the value of `site.lang`
+    reactions_enabled: "1"    # optional, default to the value of '1'
+
+# ──────────────────────────────────────────────
+# 분석 (Google Analytics 4)
+# ──────────────────────────────────────────────
+analytics:
+  google:
+    id: "G-XXXXXXXXXX"  # GA4 측정 ID (placeholder)
+
+# ──────────────────────────────────────────────
+# 페이지네이션
+# ──────────────────────────────────────────────
+paginate: 10
+
+# ──────────────────────────────────────────────
+# 소셜 / 저자 정보
+# ──────────────────────────────────────────────
+social:
+  name: ""               # 이름 (placeholder)
+  email: ""              # 이메일 (placeholder)
+  links: []              # GitHub, LinkedIn 등 (placeholder)
+
+# ──────────────────────────────────────────────
+# Jekyll 빌드 설정
+# ──────────────────────────────────────────────
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+exclude:
+  - "*.gem"
+  - "*.gemspec"
+  - docs
+  - tools
+  - README.md
+  - LICENSE
+  - rollup.config.js
+  - package*.json
+  - node_modules
+  - __tests__
+
+# ──────────────────────────────────────────────
+# 기본값 설정 (Chirpy 테마 필수)
+# ──────────────────────────────────────────────
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      comments: true     # 포스트에 댓글 활성화
+      toc: true          # 포스트에 목차 표시
+      permalink: /posts/:title/
+  - scope:
+      path: _drafts
+    values:
+      comments: false
+  - scope:
+      path: ""
+      type: tabs
+    values:
+      layout: page
+      permalink: /:title/
+
+# ──────────────────────────────────────────────
+# Kramdown 설정
+# ──────────────────────────────────────────────
+kramdown:
+  footnote_backlink: "&#8617;&#xfe0e;"
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
+# ──────────────────────────────────────────────
+# Jekyll Archives (카테고리/태그 페이지 자동 생성)
+# ──────────────────────────────────────────────
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/

@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+Gemfile.lock
+
+# Jekyll build output
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Kiro specs (개발 문서, 배포 불필요)
+.kiro/
