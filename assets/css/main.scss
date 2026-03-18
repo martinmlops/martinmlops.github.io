@@ -71,16 +71,21 @@ $x-large: 1400px;
     flex: 0 0 auto;
     width: auto;
     min-width: 0;
+    margin-right: 2em;
   }
 
-  article.page {
+  article.page,
+  .archive {
     width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 }
 
 @media (min-width: 1024px) {
-  #main.sidebar-collapsed article.page {
-    padding-left: 1em;
+  #main.sidebar-collapsed article.page,
+  #main.sidebar-collapsed .archive {
+    padding-left: 0;
   }
 }
 
