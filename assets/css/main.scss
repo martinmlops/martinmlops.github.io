@@ -25,52 +25,7 @@ $primary-color: #C4BCF5;
   position: static !important;
 }
 
-/* ── 페이지 전체 너비 ── */
-.page {
-  width: 100% !important;
-}
-
-/* ── 콘텐츠 + TOC 수평 배치 (완전 형제 관계) ── */
-.page__body-row {
-  display: flex;
-  gap: 2em;
-  align-items: flex-start;
-}
-
-.page__body-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.page__body-toc {
-  flex: 0 0 250px;
-  position: sticky;
-  top: 2em;
-  max-height: calc(100vh - 4em);
-  overflow-y: auto;
-}
-
-/* ── 테마 기본 sidebar__right 스타일 무력화 ── */
-.sidebar__right {
-  display: none !important;
-}
-
 /* ── 홈/아카이브 페이지 ── */
 .archive {
   max-width: 100%;
-}
-
-/* ── 모바일 대응 ── */
-@media (max-width: 1024px) {
-  .page__body-row {
-    flex-direction: column;
-  }
-  .page__body-toc {
-    flex: none;
-    width: 100%;
-    position: static;
-    max-height: none;
-    margin-bottom: 1.5em;
-    order: -1;
-  }
 }
