@@ -1,15 +1,16 @@
 ---
 title: "Kubernetes 아키텍처 기초"
 date: 2026-03-18 10:00:00 +0900
-categories: [Kubernetes, 기초]
-tags: [kubernetes, k8s, architecture, container, orchestration]
-description: "Kubernetes 클러스터의 핵심 아키텍처와 주요 컴포넌트를 Mermaid 다이어그램과 함께 알아봅니다."
-image:
-  path: /assets/images/kubernetes/architecture-basics.png
-  alt: "Kubernetes 아키텍처 다이어그램"
-math: false
-mermaid: true
-pin: false
+categories:
+  - Kubernetes
+  - 기초
+tags:
+  - kubernetes
+  - k8s
+  - architecture
+  - container
+  - orchestration
+excerpt: "Kubernetes 클러스터의 핵심 아키텍처와 주요 컴포넌트를 Mermaid 다이어그램과 함께 알아봅니다."
 ---
 
 ## 개요

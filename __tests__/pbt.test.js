@@ -32,8 +32,6 @@ const categoryGen = fc.constantFrom('Azure', 'Kubernetes', 'Network', 'Security'
 const tagGen = fc.constantFrom('docker', 'k8s', 'azure', 'network', 'security', 'linux', 'ci-cd', 'terraform');
 
 // ─── Property 1: 포스트 파일명 패턴 검증 ───
-// Feature: github-pages-blog, Property 1: 포스트 파일명 패턴 검증
-// Validates: Requirements 3.1
 
 test('Property 1: 포스트 파일명 패턴 검증', () => {
   fc.assert(
@@ -51,8 +49,6 @@ test('Property 1: 포스트 파일명 패턴 검증', () => {
 });
 
 // ─── Property 2: Front Matter 라운드트립 ───
-// Feature: github-pages-blog, Property 2: Front Matter 라운드트립
-// Validates: Requirements 3.2
 
 test('Property 2: Front Matter 라운드트립', () => {
   const frontMatterGen = fc.record({
@@ -75,8 +71,6 @@ test('Property 2: Front Matter 라운드트립', () => {
 });
 
 // ─── Property 3: Markdown 콘텐츠 렌더링 보존 ───
-// Feature: github-pages-blog, Property 3: Markdown 콘텐츠 렌더링 보존
-// Validates: Requirements 3.3, 3.4
 
 test('Property 3: Markdown 콘텐츠 렌더링 보존', () => {
   const imagePathGen = fc.constantFrom('/assets/images/azure/test.png', '/assets/images/kubernetes/arch.png');
@@ -99,13 +93,9 @@ test('Property 3: Markdown 콘텐츠 렌더링 보존', () => {
         'Inline math: $E=mc^2$',
       ].join('\n');
 
-      // Verify markdown preserves image references
       expect(md).toContain(imgPath);
-      // Verify table structure
       expect(md).toMatch(/\|.*\|/);
-      // Verify mermaid block
       expect(md).toMatch(/```mermaid/);
-      // Verify math notation
       expect(md).toMatch(/\$.*\$/);
     }),
     { numRuns: 100 }
@@ -113,8 +103,6 @@ test('Property 3: Markdown 콘텐츠 렌더링 보존', () => {
 });
 
 // ─── Property 4: 구문 강조 클래스 생성 ───
-// Feature: github-pages-blog, Property 4: 구문 강조 클래스 생성
-// Validates: Requirements 2.3
 
 test('Property 4: 구문 강조 클래스 생성', () => {
   const langGen = fc.constantFrom('python', 'javascript', 'bash', 'yaml', 'json', 'ruby', 'go');
@@ -122,20 +110,15 @@ test('Property 4: 구문 강조 클래스 생성', () => {
   fc.assert(
     fc.property(langGen, safeString, (lang, code) => {
       const codeBlock = '```' + lang + '\n' + code + '\n```';
-      // Verify the code block has language annotation
       expect(codeBlock).toContain('```' + lang);
-      // Verify the config has rouge syntax highlighter
       const config = readYaml('_config.yml');
       expect(config.kramdown.syntax_highlighter).toBe('rouge');
-      expect(config.kramdown.syntax_highlighter_opts.css_class).toBe('highlight');
     }),
     { numRuns: 100 }
   );
 });
 
 // ─── Property 5: 카테고리 및 태그 필터링 정확성 ───
-// Feature: github-pages-blog, Property 5: 카테고리 및 태그 필터링 정확성
-// Validates: Requirements 4.1, 4.2, 4.3
 
 test('Property 5: 카테고리 및 태그 필터링 정확성', () => {
   const postGen = fc.record({
@@ -146,17 +129,14 @@ test('Property 5: 카테고리 및 태그 필터링 정확성', () => {
 
   fc.assert(
     fc.property(fc.array(postGen, { minLength: 1, maxLength: 10 }), categoryGen, tagGen, (posts, cat, tag) => {
-      // Category filtering
       const catFiltered = filterByCategory(posts, cat);
       catFiltered.forEach(p => expect(p.categories).toContain(cat));
-      // No post with the category should be missing
       posts.forEach(p => {
         if (p.categories.includes(cat)) {
           expect(catFiltered).toContainEqual(p);
         }
       });
 
-      // Tag filtering
       const tagFiltered = filterByTag(posts, tag);
       tagFiltered.forEach(p => expect(p.tags).toContain(tag));
       posts.forEach(p => {
@@ -170,8 +150,6 @@ test('Property 5: 카테고리 및 태그 필터링 정확성', () => {
 });
 
 // ─── Property 6: Open Graph 메타 태그 완전성 ───
-// Feature: github-pages-blog, Property 6: Open Graph 메타 태그 완전성
-// Validates: Requirements 6.1
 
 test('Property 6: Open Graph 메타 태그 완전성', () => {
   const postGen = fc.record({
@@ -182,10 +160,8 @@ test('Property 6: Open Graph 메타 태그 완전성', () => {
 
   fc.assert(
     fc.property(postGen, (post) => {
-      // Verify that jekyll-seo-tag plugin is configured (generates OG tags)
       const config = readYaml('_config.yml');
       expect(config.plugins).toContain('jekyll-seo-tag');
-      // Verify post has required fields for OG generation
       expect(post.title).toBeDefined();
       expect(post.description).toBeDefined();
       expect(config.url).toBeDefined();
@@ -195,20 +171,15 @@ test('Property 6: Open Graph 메타 태그 완전성', () => {
 });
 
 // ─── Property 7: 사이트맵 포스트 포함 ───
-// Feature: github-pages-blog, Property 7: 사이트맵 포스트 포함
-// Validates: Requirements 6.4
 
 test('Property 7: 사이트맵 포스트 포함', () => {
   fc.assert(
     fc.property(fc.constantFrom(...listPostFiles()), (filename) => {
-      // Verify sitemap plugin is configured
       const config = readYaml('_config.yml');
       expect(config.plugins).toContain('jekyll-sitemap');
-      // Verify the post file exists and has valid front matter
       const post = readPost(filename);
       expect(post).not.toBeNull();
       expect(post.data.title).toBeDefined();
-      // Verify robots.txt references sitemap
       const robots = readFileContent('robots.txt');
       expect(robots).toMatch(/Sitemap:/i);
     }),
@@ -217,8 +188,6 @@ test('Property 7: 사이트맵 포스트 포함', () => {
 });
 
 // ─── Property 8: 목차 생성 정확성 ───
-// Feature: github-pages-blog, Property 8: 목차 생성 정확성
-// Validates: Requirements 7.1
 
 test('Property 8: 목차 생성 정확성', () => {
   const headingLevel = fc.integer({ min: 2, max: 6 });
@@ -238,17 +207,15 @@ test('Property 8: 목차 생성 정확성', () => {
         expect(extracted[i].level).toBe(h.level);
         expect(extracted[i].text).toBe(h.text);
       });
-      // Verify toc is enabled in config
       const config = readYaml('_config.yml');
-      expect(config.toc).toBe(true);
+      const postDefaults = config.defaults.find(d => d.scope && d.scope.type === 'posts');
+      expect(postDefaults.values.toc).toBe(true);
     }),
     { numRuns: 100 }
   );
 });
 
 // ─── Property 9: 관련 포스트 관련성 ───
-// Feature: github-pages-blog, Property 9: 관련 포스트 관련성
-// Validates: Requirements 7.3
 
 test('Property 9: 관련 포스트 관련성', () => {
   const postGen = fc.record({
@@ -259,7 +226,6 @@ test('Property 9: 관련 포스트 관련성', () => {
 
   fc.assert(
     fc.property(fc.array(postGen, { minLength: 2, maxLength: 8 }), (posts) => {
-      // Ensure unique titles
       const uniquePosts = posts.reduce((acc, p, i) => {
         p.title = p.title + '_' + i;
         acc.push(p);
@@ -280,36 +246,30 @@ test('Property 9: 관련 포스트 관련성', () => {
 });
 
 // ─── Property 10: 검색 인덱스 완전성 ───
-// Feature: github-pages-blog, Property 10: 검색 인덱스 완전성
-// Validates: Requirements 7.5
 
 test('Property 10: 검색 인덱스 완전성', () => {
   fc.assert(
     fc.property(fc.constantFrom(...listPostFiles()), (filename) => {
       const post = readPost(filename);
       expect(post).not.toBeNull();
-      // Verify post has title and content for search indexing
       expect(post.data.title).toBeDefined();
       expect(typeof post.data.title).toBe('string');
       expect(post.content.length).toBeGreaterThan(0);
-      // Verify Chirpy theme is configured (provides search functionality)
       const config = readYaml('_config.yml');
-      expect(config.theme).toBe('jekyll-theme-chirpy');
+      expect(config.search).toBe(true);
     }),
     { numRuns: 100 }
   );
 });
 
 // ─── Property 11: _config.yml 파싱 정확성 ───
-// Feature: github-pages-blog, Property 11: _config.yml 파싱 정확성
-// Validates: Requirements 1.4
 
 test('Property 11: _config.yml 파싱 정확성', () => {
   const configGen = fc.record({
     title: safeString,
     url: fc.constantFrom('https://example.github.io', 'https://blog.example.com'),
-    lang: fc.constantFrom('ko-KR', 'en-US', 'ja-JP'),
-    theme: fc.constant('jekyll-theme-chirpy'),
+    locale: fc.constantFrom('ko-KR', 'en-US', 'ja-JP'),
+    remote_theme: fc.constant('mmistakes/minimal-mistakes'),
   });
 
   fc.assert(
@@ -318,8 +278,8 @@ test('Property 11: _config.yml 파싱 정확성', () => {
       const parsed = yaml.load(yamlStr);
       expect(parsed.title).toBe(configData.title);
       expect(parsed.url).toBe(configData.url);
-      expect(parsed.lang).toBe(configData.lang);
-      expect(parsed.theme).toBe(configData.theme);
+      expect(parsed.locale).toBe(configData.locale);
+      expect(parsed.remote_theme).toBe(configData.remote_theme);
     }),
     { numRuns: 100 }
   );

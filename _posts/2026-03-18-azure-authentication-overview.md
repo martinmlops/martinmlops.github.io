@@ -1,15 +1,16 @@
 ---
 title: "Azure 인증 및 접근 제어 개요"
 date: 2026-03-18 09:00:00 +0900
-categories: [Azure, 인증 및 접근 제어]
-tags: [azure, authentication, authorization, entra-id, rbac]
-description: "Azure에서의 인증(AuthN)과 인가(AuthZ) 개념을 정리하고, Microsoft Entra ID 기반의 접근 제어 방식을 살펴봅니다."
-image:
-  path: /assets/images/azure/authentication-overview.png
-  alt: "Azure 인증 및 접근 제어 아키텍처"
-math: false
-mermaid: false
-pin: false
+categories:
+  - Azure
+  - 인증 및 접근 제어
+tags:
+  - azure
+  - authentication
+  - authorization
+  - entra-id
+  - rbac
+excerpt: "Azure에서의 인증(AuthN)과 인가(AuthZ) 개념을 정리하고, Microsoft Entra ID 기반의 접근 제어 방식을 살펴봅니다."
 ---
 
 ## 개요
@@ -127,7 +128,7 @@ az role assignment create \
 - 실시간 위험 감지
 
 > **참고:** 조건부 액세스 정책은 1차 인증이 완료된 후에 적용됩니다. DDoS 공격에 대한 1차 방어선으로 사용되지 않습니다.
-{: .prompt-info }
+{: .notice--info }
 
 ## 모범 사례
 

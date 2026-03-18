@@ -1,15 +1,16 @@
 ---
 title: "클라우드 보안 기초 - 핵심 원칙과 모범 사례"
 date: 2026-03-18 12:00:00 +0900
-categories: [Security, 보안 기초]
-tags: [security, cloud-security, zero-trust, encryption, cia-triad]
-description: "클라우드 환경에서의 보안 기초 개념과 핵심 원칙(CIA Triad, Zero Trust)을 수식과 함께 정리합니다."
-image:
-  path: /assets/images/network/security-best-practices.png
-  alt: "클라우드 보안 모범 사례"
-math: true
-mermaid: true
-pin: false
+categories:
+  - Security
+  - 보안 기초
+tags:
+  - security
+  - cloud-security
+  - zero-trust
+  - encryption
+  - cia-triad
+excerpt: "클라우드 환경에서의 보안 기초 개념과 핵심 원칙(CIA Triad, Zero Trust)을 수식과 함께 정리합니다."
 ---
 
 ## 개요
@@ -186,7 +187,7 @@ $$
 - **영향(Impact) 감소**: 데이터 분류, 백업, 재해 복구 계획
 
 > **중요:** 보안은 한 번 설정하고 끝나는 것이 아닙니다. 지속적인 모니터링과 개선이 필요합니다.
-{: .prompt-warning }
+{: .notice--warning }
 
 ## 참고 자료
 
