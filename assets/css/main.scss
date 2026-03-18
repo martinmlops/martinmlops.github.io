@@ -62,3 +62,122 @@ $x-large: 1400px;
     display: none;
   }
 }
+
+/* ── 다크모드 토글 버튼 (네비게이션 바) ── */
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  line-height: 1;
+  vertical-align: middle;
+  transition: transform 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.2);
+}
+
+/* ── 다크모드 색상 ── */
+body.dark-mode {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+
+  .masthead {
+    background-color: #16213e;
+    border-bottom-color: #0f3460;
+  }
+
+  .greedy-nav {
+    background: #16213e;
+
+    a {
+      color: #e0e0e0;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+
+  .page__content {
+    a {
+      color: lighten($primary-color, 10%);
+    }
+  }
+
+  .sidebar.sticky {
+    background-color: #16213e;
+    color: #e0e0e0;
+
+    a {
+      color: #e0e0e0;
+    }
+  }
+
+  .page__title,
+  .page__meta,
+  .page__content,
+  .archive__item-title {
+    color: #e0e0e0;
+  }
+
+  .page__footer {
+    background-color: #0f3460;
+    color: #ccc;
+  }
+
+  pre, code {
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+
+  table {
+    th {
+      background-color: #16213e;
+      color: #e0e0e0;
+    }
+    td {
+      border-color: #333;
+    }
+  }
+
+  .notice--warning {
+    background-color: #2a2000;
+    color: #ffd700;
+  }
+
+  .toc {
+    background-color: #16213e;
+    border-color: #333;
+
+    a {
+      color: #ccc;
+    }
+  }
+
+  .nav__title {
+    background: #0f3460;
+    color: #e0e0e0;
+  }
+
+  .sidebar-toggle {
+    border-color: $primary-color;
+    color: $primary-color;
+
+    &:hover {
+      background: $primary-color;
+      color: #1a1a2e;
+    }
+  }
+
+  .search-content {
+    background-color: #1a1a2e;
+
+    .search-input {
+      background-color: #16213e;
+      color: #e0e0e0;
+    }
+  }
+}
