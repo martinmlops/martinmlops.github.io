@@ -36,7 +36,7 @@ after_footer_scripts:
 # ──────────────────────────────────────────────
 author:
   name: "martinmlops"
-  avatar: "/assets/images/profile.svg"
+  avatar: "/assets/images/profile.jpg"
   bio: "Cloud & Infrastructure Engineer"
   location: "South Korea"
   links:
