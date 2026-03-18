@@ -40,34 +40,35 @@ layout: default
           {% include page__meta.html locale=locale %}
         </header>
       {% endunless %}
+    </div>
 
-      <div class="page__content-wrapper">
+    <div class="page__body-row">
+      <div class="page__body-content">
         <section class="page__content e-content" itemprop="text">
           {{ content }}
           {% if page.link %}<div><a href="{{ page.link }}" class="btn btn--primary">{{ site.data.ui-text[locale].ext_link_label | default: "Direct Link" }}</a></div>{% endif %}
         </section>
 
-        {% if page.toc %}
-        <aside class="sidebar__right {% if page.toc_sticky %}sticky{% endif %}">
-          <nav class="toc" aria-label="Table of contents">
-            <header><h4 class="nav__title"><i class="fas fa-{{ page.toc_icon | default: 'file-alt' }}"></i> {{ page.toc_label | default: site.data.ui-text[locale].toc_label | default: "On this page" }}</h4></header>
-            {% include toc.html sanitize=true html=content h_min=1 h_max=6 class="toc__menu" skip_no_ids=true %}
-          </nav>
-        </aside>
-        {% endif %}
+        <footer class="page__meta">
+          {% if site.data.ui-text[locale].meta_label %}
+            <h4 class="page__meta-title">{{ site.data.ui-text[locale].meta_label }}</h4>
+          {% endif %}
+          {% include page__taxonomy.html locale=locale %}
+          {% include page__date.html locale=locale %}
+        </footer>
+
+        {% if page.share %}{% include social-share.html locale=locale %}{% endif %}
+        {% include post_pagination.html locale=locale %}
       </div>
 
-      <footer class="page__meta">
-        {% if site.data.ui-text[locale].meta_label %}
-          <h4 class="page__meta-title">{{ site.data.ui-text[locale].meta_label }}</h4>
-        {% endif %}
-        {% include page__taxonomy.html locale=locale %}
-        {% include page__date.html locale=locale %}
-      </footer>
-
-      {% if page.share %}{% include social-share.html locale=locale %}{% endif %}
-
-      {% include post_pagination.html locale=locale %}
+      {% if page.toc %}
+      <div class="page__body-toc">
+        <nav class="toc" aria-label="Table of contents">
+          <header><h4 class="nav__title"><i class="fas fa-{{ page.toc_icon | default: 'file-alt' }}"></i> {{ page.toc_label | default: site.data.ui-text[locale].toc_label | default: "On this page" }}</h4></header>
+          {% include toc.html sanitize=true html=content h_min=1 h_max=6 class="toc__menu" skip_no_ids=true %}
+        </nav>
+      </div>
+      {% endif %}
     </div>
 
     {% if site.comments.provider and page.comments %}

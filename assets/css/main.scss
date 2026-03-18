@@ -30,58 +30,47 @@ $primary-color: #C4BCF5;
   width: 100% !important;
 }
 
-.page__inner-wrap {
-  max-width: 100%;
-}
-
-/* ── 콘텐츠 + TOC 그리드 레이아웃 ── */
-.page__content-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 250px;
+/* ── 콘텐츠 + TOC 수평 배치 (완전 형제 관계) ── */
+.page__body-row {
+  display: flex;
   gap: 2em;
-  align-items: start;
+  align-items: flex-start;
 }
 
-.page__content-wrapper > .page__content {
-  min-width: 0; /* 그리드 오버플로 방지 */
+.page__body-content {
+  flex: 1;
+  min-width: 0;
 }
 
-/* ── 오른쪽 TOC 사이드바 ── */
-.sidebar__right {
-  position: static !important;
-  width: 100% !important;
-  float: none !important;
-  margin: 0 !important;
-}
-
-.sidebar__right.sticky {
-  position: sticky !important;
+.page__body-toc {
+  flex: 0 0 250px;
+  position: sticky;
   top: 2em;
   max-height: calc(100vh - 4em);
   overflow-y: auto;
 }
 
-/* ── page__content 기본 리셋 ── */
-.page__content {
-  padding-right: 0 !important;
+/* ── 테마 기본 sidebar__right 스타일 무력화 ── */
+.sidebar__right {
+  display: none !important;
 }
 
-/* ── 홈/아카이브 페이지 (TOC 없음) ── */
+/* ── 홈/아카이브 페이지 ── */
 .archive {
   max-width: 100%;
 }
 
 /* ── 모바일 대응 ── */
 @media (max-width: 1024px) {
-  .page__content-wrapper {
-    grid-template-columns: 1fr;
+  .page__body-row {
+    flex-direction: column;
   }
-  .sidebar__right,
-  .sidebar__right.sticky {
-    position: static !important;
-    width: 100% !important;
+  .page__body-toc {
+    flex: none;
+    width: 100%;
+    position: static;
     max-height: none;
     margin-bottom: 1.5em;
-    order: -1; /* 모바일에서 TOC를 콘텐츠 위에 표시 */
+    order: -1;
   }
 }
