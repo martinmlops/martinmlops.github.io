@@ -11,15 +11,19 @@ $x-large: 1400px;
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-/* ── 프로필 사진 크기 확대 ── */
-.author__avatar img {
-  max-width: 140px;
-  border-radius: 50%;
+/* ── 프로필 사진 크기 및 원형 테두리 ── */
+.author__avatar {
+  width: 120px;
+  height: 120px;
 }
 
-.author__avatar {
-  width: 140px;
-  height: 140px;
+.author__avatar img {
+  max-width: 120px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid $primary-color;
 }
 
 /* ── 사이드바 토글 버튼 ── */
