@@ -28,6 +28,7 @@ head_scripts:
 after_footer_scripts:
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
   - /assets/js/mermaid-init.js
+  - /assets/js/sidebar-toggle.js
 
 # ──────────────────────────────────────────────
 # 저자 정보

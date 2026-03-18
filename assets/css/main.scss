@@ -10,3 +10,49 @@ $x-large: 1400px;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
+
+/* ── 사이드바 토글 ── */
+.sidebar.sticky {
+  position: relative;
+  transition: width 0.3s ease, min-width 0.3s ease;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 0;
+  right: -24px;
+  width: 24px;
+  height: 32px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 32px;
+  text-align: center;
+  padding: 0;
+  z-index: 10;
+}
+
+.sidebar-toggle:hover {
+  background: #e0e0e0;
+}
+
+.sidebar-content {
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.sticky.collapsed .sidebar-content {
+  display: none;
+}
+
+.sidebar.sticky.collapsed {
+  min-width: 0 !important;
+  width: 0 !important;
+  overflow: visible;
+}
+
+.sidebar.sticky.collapsed .sidebar-toggle {
+  right: -24px;
+}
