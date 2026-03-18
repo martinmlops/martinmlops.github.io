@@ -11,38 +11,19 @@ $x-large: 1400px;
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-/* ── 좌우 스크롤 방지 ── */
-html, body {
-  overflow-x: hidden;
-}
-
-/* ── 사이드바 컨테이너 ── */
-.sidebar.sticky {
-  position: sticky;
-  top: 2em;
-  transition: width 0.3s ease, min-width 0.3s ease;
-  z-index: 10;
-}
-
-/* ── 토글 버튼 디자인 ── */
+/* ── 토글 버튼 (사이드바 내부 상단) ── */
 .sidebar-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 40px;
-  position: absolute;
-  top: 12px;
-  right: -20px;
+  display: block;
+  width: 100%;
+  padding: 6px 0;
+  margin-bottom: 8px;
   background: $primary-color;
   color: #fff;
   border: none;
-  border-radius: 0 6px 6px 0;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 10px;
-  padding: 0;
-  z-index: 11;
-  box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+  font-size: 11px;
+  text-align: center;
   transition: background 0.2s ease;
 }
 
@@ -52,49 +33,18 @@ html, body {
 
 /* ── 사이드바 콘텐츠 ── */
 .sidebar-content {
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-  overflow: hidden;
+  transition: opacity 0.3s ease;
 }
 
 /* ── 접힌 상태 ── */
-.sidebar.sticky.collapsed {
-  min-width: 0 !important;
-  width: 24px !important;
-  overflow: visible;
-}
-
 .sidebar.sticky.collapsed .sidebar-content {
   display: none;
 }
 
 .sidebar.sticky.collapsed .sidebar-toggle {
-  right: -20px;
-}
-
-/* ── 접힌 상태에서 콘텐츠 영역 확장 ── */
-.sidebar.sticky.collapsed + .page,
-.sidebar.sticky.collapsed ~ article {
-  max-width: 100% !important;
-  width: 100% !important;
-}
-
-/* #main 내부 flex 레이아웃 활용 */
-#main {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-#main > .sidebar.sticky.collapsed {
-  flex: 0 0 24px;
-}
-
-#main > .sidebar.sticky:not(.collapsed) {
-  flex: 0 0 auto;
-}
-
-#main > article.page {
-  flex: 1;
-  min-width: 0;
+  width: auto;
+  padding: 6px 8px;
+  border-radius: 4px;
 }
 
 /* ── 모바일 대응 ── */

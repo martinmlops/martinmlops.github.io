@@ -1,12 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
   var btn = document.getElementById("sidebar-toggle");
-  var content = document.getElementById("sidebar-content");
   var sidebar = document.getElementById("author-sidebar");
-  if (!btn || !content) return;
+  if (!btn || !sidebar) return;
 
   btn.addEventListener("click", function () {
     var collapsed = sidebar.classList.toggle("collapsed");
     btn.setAttribute("aria-expanded", !collapsed);
-    btn.textContent = collapsed ? "▶" : "◀";
+    btn.textContent = collapsed ? "▶ 프로필 열기" : "◀ 접기";
   });
 });
