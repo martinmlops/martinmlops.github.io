@@ -317,3 +317,22 @@ html.dark-mode {
     border-color: #444;
   }
 }
+
+/* ── Permalink: 텍스트 숨기고 🔗 이모지만 유지 ── */
+.page__content h1,
+.page__content h2,
+.page__content h3,
+.page__content h4,
+.page__content h5,
+.page__content h6 {
+  a[href^="#"] {
+    font-size: 0;
+    text-decoration: none;
+
+    &::after {
+      content: " 🔗";
+      font-size: 0.6rem;
+      vertical-align: middle;
+    }
+  }
+}
