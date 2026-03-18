@@ -1,7 +1,7 @@
 {% assign locale = include.locale | default: site.locale %}
 {% if page.author_profile or layout.author_profile or page.sidebar %}
   <div class="sidebar sticky" id="author-sidebar">
-  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="사이드바 토글" aria-expanded="true">◀ 접기</button>
+  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="사이드바 토글" aria-expanded="true">◀</button>
   <div class="sidebar-content" id="sidebar-content">
   {% if page.author_profile or layout.author_profile %}{% include author-profile.html locale=locale %}{% endif %}
   {% if page.sidebar %}

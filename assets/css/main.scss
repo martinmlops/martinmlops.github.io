@@ -11,24 +11,34 @@ $x-large: 1400px;
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
 
-/* ── 토글 버튼 (사이드바 내부 상단) ── */
+/* ── 토글 버튼 (우측 상단 작게) ── */
 .sidebar-toggle {
-  display: block;
-  width: 100%;
-  padding: 6px 0;
-  margin-bottom: 8px;
-  background: $primary-color;
-  color: #fff;
-  border: none;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: none;
+  border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 24px;
   text-align: center;
-  transition: background 0.2s ease;
+  color: #888;
+  transition: background 0.2s, color 0.2s;
+  z-index: 10;
 }
 
 .sidebar-toggle:hover {
-  background: darken($primary-color, 10%);
+  background: #f0f0f0;
+  color: #333;
+}
+
+/* ── 사이드바를 relative로 ── */
+.sidebar.sticky {
+  position: relative;
 }
 
 /* ── 사이드바 콘텐츠 ── */
@@ -42,9 +52,7 @@ $x-large: 1400px;
 }
 
 .sidebar.sticky.collapsed .sidebar-toggle {
-  width: auto;
-  padding: 6px 8px;
-  border-radius: 4px;
+  position: static;
 }
 
 /* ── 모바일 대응 ── */

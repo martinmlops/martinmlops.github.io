@@ -6,6 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
   btn.addEventListener("click", function () {
     var collapsed = sidebar.classList.toggle("collapsed");
     btn.setAttribute("aria-expanded", !collapsed);
-    btn.textContent = collapsed ? "▶ 프로필 열기" : "◀ 접기";
+    btn.textContent = collapsed ? "▶" : "◀";
   });
 });
