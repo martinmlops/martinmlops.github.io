@@ -11,15 +11,16 @@ const {
 // ─── Jekyll 설정 확인 ───
 
 describe('Jekyll Configuration', () => {
-  test('Gemfile contains Jekyll and minimal-mistakes theme', () => {
+  test('Gemfile contains Jekyll and remote theme plugin', () => {
     const gemfile = readFileContent('Gemfile');
-    expect(gemfile).toMatch(/github-pages/);
+    expect(gemfile).toMatch(/gem\s+["']jekyll["']/);
+    expect(gemfile).toMatch(/jekyll-remote-theme/);
   });
 
   test('Gemfile contains sitemap and seo-tag plugins', () => {
     const gemfile = readFileContent('Gemfile');
-    expect(gemfile).toMatch(/github-pages/);
-    expect(gemfile).toMatch(/jekyll-include-cache/);
+    expect(gemfile).toMatch(/jekyll-sitemap/);
+    expect(gemfile).toMatch(/jekyll-seo-tag/);
   });
 
   test('_config.yml has required fields', () => {
