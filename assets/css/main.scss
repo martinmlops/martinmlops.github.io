@@ -4,5 +4,9 @@
 /* 소라색 (연한 보라-파랑) 테마 */
 $primary-color: #C4BCF5;
 
+/* 좌우 여백 축소 */
+$max-width: 1600px;
+$x-large: 1600px;
+
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
 @import "minimal-mistakes";
