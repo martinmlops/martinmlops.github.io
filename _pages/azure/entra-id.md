@@ -1,16 +1,19 @@
 ---
-title: "Microsoft Entra ID & Entra Domain Service"
+title: "Microsoft Entra ID & Domain Service"
 layout: single
-permalink: /categories/azure/microsoft-entra-id-entra-domain-service/
+permalink: /categories/azure/microsoft-entra-id/
 author_profile: true
 ---
 
-{% assign posts = site.posts | where_exp: "post", "post.categories contains 'Azure'" | where_exp: "post", "post.categories contains 'Microsoft Entra ID & Entra Domain Service'" %}
+Microsoft Entra ID 및 Entra Domain Service에 대한 학습 자료입니다.
+
+{% assign posts = site.posts | where_exp: "post", "post.categories contains 'Microsoft Entra ID'" | sort: "date" %}
 
 {% for post in posts %}
-- [{{ post.title }}]({{ post.url | relative_url }}) <small>({{ post.date | date: "%Y-%m-%d" }})</small>
-{% endfor %}
+### [{{ post.title }}]({{ post.url }})
+<small>{{ post.date | date: "%Y-%m-%d" }}</small>
 
-{% if posts.size == 0 %}
-아직 포스트가 없습니다.
-{% endif %}
+{{ post.excerpt | strip_html | truncate: 200 }}
+
+---
+{% endfor %}
