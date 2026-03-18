@@ -3,14 +3,12 @@ title: "AI"
 layout: single
 permalink: /categories/ai/
 author_profile: true
-toc: true
-toc_sticky: true
 ---
 
-{% assign cat_posts = site.posts | where_exp: "post", "post.categories contains 'AI'" %}
+{% assign ai_posts = site.posts | where_exp: "post", "post.categories contains 'AI'" %}
 {% assign sub_categories = "" %}
 
-{% for post in cat_posts %}
+{% for post in ai_posts %}
   {% if post.categories.size > 1 %}
     {% assign sub = post.categories[1] %}
   {% else %}
@@ -28,18 +26,11 @@ toc_sticky: true
 {% assign sub_array = sub_categories | split: "|" | sort %}
 
 {% for sub in sub_array %}
-
-## {{ sub }}
-
-{% for post in cat_posts %}
-  {% if post.categories.size > 1 %}
-    {% assign post_sub = post.categories[1] %}
-  {% else %}
-    {% assign post_sub = "기타" %}
-  {% endif %}
-  {% if post_sub == sub %}
-- [{{ post.title }}]({{ post.url | relative_url }}) <small>({{ post.date | date: "%Y-%m-%d" }})</small>
-  {% endif %}
+{% assign count = 0 %}
+{% for post in ai_posts %}
+  {% if post.categories.size > 1 %}{% assign ps = post.categories[1] %}{% else %}{% assign ps = "기타" %}{% endif %}
+  {% if ps == sub %}{% assign count = count | plus: 1 %}{% endif %}
 {% endfor %}
-
+{% assign sub_slug = sub | slugify %}
+- [{{ sub }}](/categories/ai/{{ sub_slug }}/) <small>({{ count }})</small>
 {% endfor %}
