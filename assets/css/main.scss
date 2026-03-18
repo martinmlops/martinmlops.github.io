@@ -65,6 +65,25 @@ $x-large: 1400px;
   position: static;
 }
 
+/* ── 사이드바 접힘 시 콘텐츠 확장 ── */
+#main.sidebar-collapsed {
+  .sidebar {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 0;
+  }
+
+  article.page {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  #main.sidebar-collapsed article.page {
+    padding-left: 1em;
+  }
+}
+
 @media (max-width: 768px) {
   .sidebar-toggle {
     display: none;
