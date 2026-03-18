@@ -52,3 +52,8 @@ $primary-color: #C4BCF5;
 .wide .page {
   padding-right: 0 !important;
 }
+
+/* 작성자 사이드바 고정 해제 - 스크롤 시 함께 올라가도록 */
+.sidebar.sticky {
+  position: static !important;
+}
