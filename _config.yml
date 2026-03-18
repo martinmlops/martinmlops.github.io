@@ -73,6 +73,7 @@ paginate_path: /page:num/
 # 플러그인
 # ──────────────────────────────────────────────
 plugins:
+  - jekyll-remote-theme
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-feed

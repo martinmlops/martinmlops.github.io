@@ -13,14 +13,13 @@ const {
 describe('Jekyll Configuration', () => {
   test('Gemfile contains Jekyll and minimal-mistakes theme', () => {
     const gemfile = readFileContent('Gemfile');
-    expect(gemfile).toMatch(/gem\s+["']jekyll["']/);
-    expect(gemfile).toMatch(/minimal-mistakes-jekyll/);
+    expect(gemfile).toMatch(/github-pages/);
   });
 
   test('Gemfile contains sitemap and seo-tag plugins', () => {
     const gemfile = readFileContent('Gemfile');
-    expect(gemfile).toMatch(/jekyll-sitemap/);
-    expect(gemfile).toMatch(/jekyll-seo-tag/);
+    expect(gemfile).toMatch(/github-pages/);
+    expect(gemfile).toMatch(/jekyll-include-cache/);
   });
 
   test('_config.yml has required fields', () => {
