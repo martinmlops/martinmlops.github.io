@@ -2,8 +2,8 @@
 title: "네트워크 기초 - OSI 7계층과 TCP/IP"
 date: 2026-03-18 11:00:00 +0900
 categories:
-  - Network
-  - 네트워크 기초
+  - Azure
+  - Azure Network
 tags:
   - network
   - osi

@@ -2,8 +2,8 @@
 title: "클라우드 보안 기초 - 핵심 원칙과 모범 사례"
 date: 2026-03-18 12:00:00 +0900
 categories:
-  - Security
-  - 보안 기초
+  - Azure
+  - 인증 및 접근 제어
 tags:
   - security
   - cloud-security
