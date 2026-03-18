@@ -318,4 +318,60 @@ html.dark-mode {
   }
 }
 
+/* ── 사이드바 카테고리 네비게이션 ── */
+.sidebar-categories {
+  margin: 0.8em 0;
+  padding: 0.6em 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.sidebar-categories__title {
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin: 0 0 0.5em 0;
+}
+
+.sidebar-categories__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    margin: 0.3em 0;
+  }
+
+  a {
+    font-size: 0.85em;
+    color: #494e52;
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $primary-color;
+    }
+
+    i {
+      color: $primary-color;
+      width: 1.2em;
+    }
+  }
+}
+
+html.dark-mode .sidebar-categories {
+  border-color: #333;
+}
+
+html.dark-mode .sidebar-categories__title {
+  color: #888;
+}
+
+html.dark-mode .sidebar-categories__list a {
+  color: #bbb;
+  &:hover { color: $primary-color; }
+}
+
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */

@@ -1,0 +1,56 @@
+{% assign locale = include.locale | default: site.locale %}
+{% assign author = page.author | default: page.authors[0] | default: site.author %}
+{% assign author = site.data.authors[author] | default: author %}
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  {% if author.avatar %}
+    <div class="author__avatar">
+      <a href="{{ author.home | default: '/' | absolute_url }}">
+        <img src="{{ author.avatar | relative_url }}" alt="{{ author.name }}" itemprop="image" class="u-photo">
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="{{ author.home | default: '/' | absolute_url }}" itemprop="url">{{ author.name }}</a>
+    </h3>
+    {% if author.bio %}
+      <div class="author__bio p-note" itemprop="description">
+        {{ author.bio | markdownify }}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- 카테고리 네비게이션 -->
+  <nav class="sidebar-categories" aria-label="카테고리">
+    <h4 class="sidebar-categories__title"><i class="fas fa-fw fa-folder-open"></i> Categories</h4>
+    <ul class="sidebar-categories__list">
+      <li><a href="/categories/azure/"><i class="fas fa-fw fa-cloud"></i> Azure</a></li>
+      <li><a href="/categories/ai/"><i class="fas fa-fw fa-robot"></i> AI</a></li>
+      <li><a href="/categories/terraform/"><i class="fas fa-fw fa-code"></i> Terraform</a></li>
+    </ul>
+  </nav>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">{{ site.data.ui-text[locale].follow_label | remove: ":" | default: "Follow" }}</button>
+    <ul class="author__urls social-icons">
+      {% if author.location %}
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-location-dot" aria-hidden="true"></i> <span itemprop="name" class="p-locality">{{ author.location }}</span>
+        </li>
+      {% endif %}
+
+      {% if author.links %}
+        {% for link in author.links %}
+          {% if link.label and link.url %}
+            <li><a href="{{ link.url }}" rel="nofollow noopener noreferrer me"{% if link.url contains 'http' %} itemprop="sameAs"{% endif %}><i class="{{ link.icon | default: 'fas fa-link' }}" aria-hidden="true"></i><span class="label">{{ link.label }}</span></a></li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% include author-profile-custom-links.html %}
+    </ul>
+  </div>
+</div>
