@@ -20,25 +20,26 @@ $x-large: 1400px;
   height: 24px;
   padding: 0;
   background: none;
-  border: 1px solid #ddd;
+  border: 1px solid $primary-color;
   border-radius: 4px;
   cursor: pointer;
   font-size: 10px;
   line-height: 24px;
   text-align: center;
-  color: #888;
+  color: $primary-color;
   transition: background 0.2s, color 0.2s;
   z-index: 10;
 }
 
 .sidebar-toggle:hover {
-  background: #f0f0f0;
-  color: #333;
+  background: $primary-color;
+  color: #fff;
 }
 
-/* ── 사이드바를 relative로 ── */
+/* ── 사이드바 sticky 유지 ── */
 .sidebar.sticky {
-  position: relative;
+  position: sticky;
+  top: 2em;
 }
 
 /* ── 사이드바 콘텐츠 ── */
