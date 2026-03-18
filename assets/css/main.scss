@@ -34,44 +34,54 @@ $primary-color: #C4BCF5;
   max-width: 100%;
 }
 
+/* ── 콘텐츠 + TOC 그리드 레이아웃 ── */
+.page__content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 2em;
+  align-items: start;
+}
+
+.page__content-wrapper > .page__content {
+  min-width: 0; /* 그리드 오버플로 방지 */
+}
+
 /* ── 오른쪽 TOC 사이드바 ── */
 .sidebar__right {
+  position: static !important;
+  width: 100% !important;
+  float: none !important;
+  margin: 0 !important;
+}
+
+.sidebar__right.sticky {
   position: sticky !important;
   top: 2em;
-  float: right !important;
-  width: 260px !important;
-  margin-right: 0 !important;
-  margin-left: 2em !important;
   max-height: calc(100vh - 4em);
   overflow-y: auto;
 }
 
-/* ── 콘텐츠: TOC 너비만큼 오른쪽 여백 확보 ── */
+/* ── page__content 기본 리셋 ── */
 .page__content {
-  margin-right: 280px;
+  padding-right: 0 !important;
 }
 
-/* TOC가 없는 페이지에서는 여백 불필요 */
-.page__content:not(:has(.sidebar__right)) {
-  margin-right: 0;
-}
-
-/* ── 홈/아카이브 페이지 ── */
+/* ── 홈/아카이브 페이지 (TOC 없음) ── */
 .archive {
   max-width: 100%;
 }
 
 /* ── 모바일 대응 ── */
 @media (max-width: 1024px) {
-  .sidebar__right {
-    float: none !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-bottom: 1.5em;
-    position: static !important;
-    max-height: none;
+  .page__content-wrapper {
+    grid-template-columns: 1fr;
   }
-  .page__content {
-    margin-right: 0;
+  .sidebar__right,
+  .sidebar__right.sticky {
+    position: static !important;
+    width: 100% !important;
+    max-height: none;
+    margin-bottom: 1.5em;
+    order: -1; /* 모바일에서 TOC를 콘텐츠 위에 표시 */
   }
 }
