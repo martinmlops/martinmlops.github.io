@@ -31,6 +31,7 @@ after_footer_scripts:
   - /assets/js/sidebar-toggle.js
   - /assets/js/theme-toggle.js
   - /assets/js/permalink-fix.js
+  - /assets/js/toc-active-fix.js
 
 # ──────────────────────────────────────────────
 # 저자 정보

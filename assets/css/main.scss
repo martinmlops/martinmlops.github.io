@@ -431,3 +431,13 @@ html.dark-mode .sidebar-categories__list a {
 }
 
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */
+
+/* ── TOC 활성 링크 (뷰포트 중앙 기준) ── */
+.toc a.is-active-link {
+  color: $primary-color !important;
+  font-weight: 600;
+}
+
+html.dark-mode .toc a.is-active-link {
+  color: lighten($primary-color, 10%) !important;
+}
