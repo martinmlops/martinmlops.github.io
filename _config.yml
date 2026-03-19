@@ -42,9 +42,6 @@ author:
   bio: "Solutions Architect"
   location: "South Korea"
   links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/martinmlops"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       url: "https://www.instagram.com/_martlln"
