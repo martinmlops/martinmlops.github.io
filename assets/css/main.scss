@@ -397,7 +397,18 @@ html.dark-mode {
   padding: 0;
 
   li {
-    margin: 0.3em 0;
+    margin: 0;
+    padding: 0.45em 0;
+    border-bottom: 1.5px solid rgba(196, 188, 245, 0.35);
+    transition: background 0.2s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba(196, 188, 245, 0.08);
+    }
   }
 
   a {
@@ -405,14 +416,10 @@ html.dark-mode {
     color: #494e52;
     text-decoration: none;
     transition: color 0.2s;
+    display: block;
 
     &:hover {
       color: $primary-color;
-    }
-
-    i {
-      color: $primary-color;
-      width: 1.2em;
     }
   }
 }
@@ -428,6 +435,11 @@ html.dark-mode .sidebar-categories__title {
 html.dark-mode .sidebar-categories__list a {
   color: #bbb;
   &:hover { color: $primary-color; }
+}
+
+html.dark-mode .sidebar-categories__list li {
+  border-bottom-color: rgba(196, 188, 245, 0.2);
+  &:hover { background: rgba(196, 188, 245, 0.06); }
 }
 
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */
