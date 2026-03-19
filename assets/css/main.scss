@@ -57,6 +57,18 @@ $x-large: 1400px;
   top: 2em;
 }
 
+/* ── 사이드바 프로필 flex 레이아웃 (하단 고정) ── */
+.sidebar .h-card {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 6em);
+}
+
+.sidebar .author__urls-wrapper {
+  margin-top: auto;
+  padding-top: 0.5em;
+}
+
 .sidebar-content {
   transition: opacity 0.3s ease;
 }
