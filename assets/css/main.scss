@@ -696,6 +696,21 @@ html.dark-mode .toc a.is-active-link {
   margin: 0 0 0.5em;
 }
 
+.footer-motto {
+  font-size: 1.1em !important;
+  font-weight: 600;
+  color: $primary-color !important;
+  letter-spacing: 0.15em;
+  margin-top: 0.6em !important;
+
+  span {
+    font-size: 0.7em;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: #999 !important;
+  }
+}
+
 .footer-social {
   display: flex;
   gap: 1em;
@@ -724,6 +739,10 @@ html.dark-mode {
 
   .footer-about p {
     color: #888;
+  }
+
+  .footer-motto span {
+    color: #777 !important;
   }
 
   .page__footer-copyright {
