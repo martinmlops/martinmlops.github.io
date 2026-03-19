@@ -4,13 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
   var main = document.getElementById("main");
   if (!btn || !sidebar || !main) return;
 
+  var STORAGE_KEY = "sidebar-collapsed";
+
   var restoreBtn = document.createElement("button");
   restoreBtn.className = "sidebar-restore-btn";
   restoreBtn.setAttribute("aria-label", "\uc0ac\uc774\ub4dc\ubc14 \uc5f4\uae30");
   restoreBtn.textContent = "\u25B6";
   document.body.appendChild(restoreBtn);
 
-  // masthead 높이를 동적으로 계산하여 버튼 위치 설정
   function positionRestoreBtn() {
     var masthead = document.querySelector(".masthead");
     if (masthead) {
@@ -27,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     main.classList.add("sidebar-collapsed");
     positionRestoreBtn();
     restoreBtn.classList.add("is-visible");
+    localStorage.setItem(STORAGE_KEY, "true");
   }
 
   function expandSidebar() {
@@ -35,6 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
     btn.textContent = "\u25C0";
     main.classList.remove("sidebar-collapsed");
     restoreBtn.classList.remove("is-visible");
+    localStorage.setItem(STORAGE_KEY, "false");
+  }
+
+  // 페이지 로드 시 이전 상태 복원
+  if (localStorage.getItem(STORAGE_KEY) === "true") {
+    collapseSidebar();
   }
 
   btn.addEventListener("click", function () {
