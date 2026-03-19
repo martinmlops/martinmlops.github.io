@@ -1,126 +1,234 @@
 ---
-title: "클라우드 아이덴티티 및 접근 제어 전략"
+title: "클라우드 아이덴티티 및 접근 제어 Deep Dive"
 date: 2026-01-15
-categories: [Azure, 클라우드 아이덴티티]
-tags: [Azure, Identity, Access Control, RBAC, ABAC, PIM, Directory Service, LDAP, Entra ID]
+categories: [Azure, Identity]
+tags: [접근 제어, RBAC, ABAC, LDAP, Active Directory, Entra ID, Kerberos, Zero Trust, PIM]
 toc: true
 toc_sticky: true
 ---
 
-## 접근 제어 모델 개요
+## 개요
 
-클라우드 환경에서 리소스에 대한 접근을 제어하는 것은 보안의 핵심입니다. 주요 접근 제어 모델을 살펴봅니다.
+접근 제어(Access Control), 디렉터리 서비스(Directory Service), 그리고 Active Directory와 Microsoft Entra ID의 비교를 다룹니다. 솔루션 아키텍트 관점에서 클라우드 아이덴티티 및 접근 제어의 전략과 실무 적용 시나리오를 상세히 살펴봅니다.
 
-### DAC (Discretionary Access Control) - 임의적 접근 제어
+---
 
-- 리소스 소유자가 직접 접근 권한을 부여/회수
-- 유연하지만 대규모 환경에서 관리가 어려움
-- 파일 시스템의 소유자 기반 권한 설정이 대표적 예시
+## 1. 접근 제어 (Access Control)의 전략
 
-### MAC (Mandatory Access Control) - 강제적 접근 제어
+접근 제어는 단순히 '문을 여는 것'이 아니라, "누가, 어떤 상황에서, 어떤 자원에, 어떤 행위를 할 수 있는가"를 결정하는 고도의 거버넌스 작업입니다.
 
-- 시스템 관리자가 중앙에서 접근 정책을 설정
-- 보안 레이블(분류 등급)에 기반한 접근 제어
-- 군사/정부 기관에서 주로 사용
-- 사용자가 임의로 권한을 변경할 수 없음
+### 1.1 인증(AuthN) vs 인가(AuthZ)의 명확한 구분
 
-### RBAC (Role-Based Access Control) - 역할 기반 접근 제어
+- **인증 (Authentication)**: "당신은 누구입니까?"에 대한 검증. 생체 인식, MFA(다단계 인증), 패스워드 등이 해당
+- **인가 (Authorization)**: "당신은 무엇을 할 수 있습니까?"에 대한 결정. 특정 API 호출, 파일 수정, 서버 접속 권한 등을 확인
 
-- 사용자에게 역할(Role)을 할당하고, 역할에 권한을 부여
-- Azure의 기본 접근 제어 모델
-- 구성 요소: 보안 주체(Security Principal), 역할 정의(Role Definition), 범위(Scope)
-- 기본 제공 역할: Owner, Contributor, Reader, User Access Administrator
+> ⚠️ 보안 사고의 상당수는 인증 실패가 아닌 '과도한 권한 부여(Over-privileged)', 즉 인가 관리의 실패에서 발생합니다. 따라서 모든 아키텍처 설계 시 **최소 권한 원칙(Least Privilege)**을 적용해야 합니다.
 
-### ABAC (Attribute-Based Access Control) - 속성 기반 접근 제어
+### 1.2 다양한 접근 제어 전략
 
-- 사용자, 리소스, 환경의 속성(Attribute)을 기반으로 접근 제어
-- RBAC보다 세밀한 제어 가능
-- 조건부 접근 정책 구현에 적합
-- 예: "부서가 Finance이고, 근무시간 내이며, 관리 디바이스에서 접근하는 경우에만 허용"
+#### DAC (Discretionary Access Control, 임의적 접근 제어)
 
-## 접근 제어 모델 비교
+- **배경**: 자원 소유자가 누구에게 권한을 줄지 '임의로' 결정하는 방식
+- **특징**: 가장 유연하며, 데이터의 소유자가 권한 부여의 주체
+- **예시**: Windows의 파일 공유 설정, Linux의 `chmod` 명령어
+- **한계**: 보안 관리가 파편화됨. 사용자가 자신의 권한을 타인에게 재전달할 수 있어, 데이터 유출 시 추적이 어렵고 대규모 조직에서는 통제력을 잃기 쉬움
 
-| 모델 | 제어 주체 | 유연성 | 관리 복잡도 | 적합 환경 |
-|------|-----------|--------|-------------|-----------|
-| DAC | 리소스 소유자 | 높음 | 낮음 | 소규모 |
-| MAC | 시스템 관리자 | 낮음 | 높음 | 군사/정부 |
-| RBAC | 역할 기반 | 중간 | 중간 | 기업 환경 |
-| ABAC | 속성 기반 | 매우 높음 | 높음 | 대규모/복합 |
+#### MAC (Mandatory Access Control, 강제적 접근 제어)
 
-## PIM (Privileged Identity Management) & JIT (Just-In-Time)
+- **배경**: 소유자의 의사와 상관없이 '중앙 정책'에 의해 접근을 통제
+- **특징**: 자원과 사용자에 보안 등급(Secret, Top Secret 등)을 부여하고, 시스템이 이를 대조하여 허가
+- **예시**: 군대, 정부 기관, 금융권 핵심 DB, SELinux(Security-Enhanced Linux)
+- **한계**: 매우 경직되어 있음. 모든 자원에 등급을 매겨야 하므로 운영 비용이 높고 사용자 편의성이 극도로 낮음
 
-### PIM 개요
+#### RBAC (Role-Based Access Control, 역할 기반 접근 제어)
 
-Azure AD PIM은 권한 있는 접근을 관리, 제어, 모니터링하는 서비스입니다.
+- **배경**: 사용자 개인이 아닌, 조직 내 '역할(Role)'을 기준으로 권한을 묶어서 관리
+- **전략적 가치**: 인사 이동이나 퇴사 시 역할만 회수하면 되므로 관리가 효율적
+- **심화 - 역할 계층(Role Hierarchy)**: 상위 역할(예: 팀장)이 하위 역할(예: 팀원)의 권한을 상속받도록 설계하여 관리 포인트를 줄임
+- **실무적 한계**: '역할 폭발(Role Explosion)' 현상이 발생할 수 있음. 특정 예외 상황을 처리하기 위해 수많은 맞춤형 역할을 만들다 보면 결국 관리가 불가능해지는 지점이 옴
 
-- 시간 제한 접근: 영구 관리자 대신 적격(Eligible) 역할 할당
-- 승인 기반 활성화: 역할 활성화 시 승인 워크플로 적용
-- MFA 강제: 역할 활성화 시 다단계 인증 요구
-- 감사 로그: 모든 권한 활성화/비활성화 기록
+#### ABAC (Attribute-Based Access Control, 속성 기반 접근 제어)
 
-### JIT (Just-In-Time) 접근
+- **배경**: 사용자, 자원, 환경의 '속성'을 조합하여 실시간으로 판단하는 가장 진보된 방식
+- **구성 요소**:
+  - **Subject**: 직무, 소속, 보안 교육 이수 여부
+  - **Resource**: 파일 종류, 데이터 민감도, 생성 날짜
+  - **Environment**: 접속 시간(9to6), 접속 국가(IP), 기기 보안 상태(MDM 준수 여부)
+- **장점**: 매우 세밀한(Fine-grained) 제어가 가능. "재무팀 직원이 평일 업무 시간에 회사 노트북으로만 회계 서류에 접근 가능"과 같은 복합 정책을 구현 가능
+- **구현체**: Microsoft Entra ID의 **조건부 액세스(Conditional Access)**가 실무에서 가장 많이 쓰이는 ABAC의 변형 모델
 
-- 필요한 시점에만 권한을 활성화
-- 기본 상태에서는 최소 권한 유지
-- 활성화 기간 만료 시 자동으로 권한 회수
-- 공격 표면(Attack Surface) 최소화
+### 1.3 PIM과 JIT
 
-## 디렉토리 서비스
+단순히 권한을 부여하는 것을 넘어, '시간'과 '범위'를 제어하는 전략이 중요해졌습니다.
 
-### LDAP (Lightweight Directory Access Protocol)
+#### PIM (Privileged Identity Management)
 
-- 디렉토리 서비스에 접근하기 위한 표준 프로토콜
-- 트리 구조의 데이터 모델 (DN, OU, CN)
-- 포트: 389 (LDAP), 636 (LDAPS)
-- 인증 및 사용자/그룹 정보 조회에 사용
+관리자 권한과 같은 고권한을 상시 보유하는 것은 매우 위험합니다.
 
-### Active Directory (AD DS)
+- **Just-In-Time (JIT)**: 평상시에는 권한이 없다가, 필요할 때만 승인 절차를 거쳐 일시적으로(예: 4시간) 권한을 활성화
+- **Just-Enough-Administration (JEA)**: "서버 관리자"라는 통권한 대신 "서비스 재시작 권한"만 주는 식으로 범위를 최소화
 
-- Microsoft의 온프레미스 디렉토리 서비스
-- LDAP, Kerberos, NTLM 프로토콜 지원
-- 도메인 컨트롤러(DC) 기반 인증
-- 그룹 정책(GPO)을 통한 중앙 관리
-- 포리스트(Forest) → 도메인(Domain) → OU 계층 구조
+#### 직무 분리 (SoD, Segregation of Duties)
 
-### Microsoft Entra ID (구 Azure AD)
+한 사람이 모든 과정을 통제하지 못하게 하는 전략입니다.
 
-- 클라우드 기반 ID 및 접근 관리 서비스
-- REST API, OAuth 2.0, SAML, OpenID Connect 지원
-- 조건부 접근(Conditional Access) 정책
-- SSO(Single Sign-On) 지원
-- B2B/B2C 시나리오 지원
+> 예: 코드 개발자와 프로덕션 배포자를 분리하여 내부 부정행위를 방지합니다.
 
-## AD DS vs Entra ID 비교
+---
 
-| 특성 | Active Directory (AD DS) | Microsoft Entra ID |
-|------|--------------------------|---------------------|
-| 배포 위치 | 온프레미스 | 클라우드 |
-| 프로토콜 | LDAP, Kerberos | REST API, OAuth, SAML |
-| 인증 방식 | Kerberos 티켓 | 토큰 기반 (JWT) |
-| 구조 | 포리스트/도메인/OU | 테넌트/디렉토리 |
-| 디바이스 관리 | GPO | Intune/MDM |
-| 확장성 | 수동 확장 | 자동 확장 |
-| 관리 | 자체 관리 | Microsoft 관리형 |
+## 2. 디렉터리 서비스 (Directory Service) 및 LDAP
 
-## 하이브리드 아이덴티티
+### 2.1 디렉터리 서비스의 본질: "조회에 특화된 DB"
 
-온프레미스 AD DS와 Entra ID를 연결하여 통합 ID 환경을 구축할 수 있습니다.
+디렉터리 서비스는 일반적인 관계형 데이터베이스(RDB)와 목적 자체가 다릅니다.
 
-### Azure AD Connect
+- **RDB (예: MySQL, Oracle)**: 빈번한 데이터의 수정, 삭제, 복잡한 트랜잭션 처리에 최적화
+- **디렉터리 서비스**: "자주 바뀌지 않는 정보의 초고속 조회"에 특화
+  - **계층 구조 (Hierarchical)**: 데이터가 트리(Tree) 구조로 저장되어 있어, 수만 명의 사용자 중 특정인의 부서나 이메일을 찾는 속도가 압도적
+  - **표준 규격**: 기종에 상관없이 누구나 동일한 방식으로 자원을 찾을 수 있도록 약속된 프로토콜이 바로 **LDAP**
 
-- 온프레미스 AD와 Entra ID 간 ID 동기화
-- 동기화 방식: Password Hash Sync, Pass-through Auth, Federation (ADFS)
-- 하이브리드 환경에서 SSO 구현의 핵심 구성 요소
+### 2.2 LDAP의 구조
 
-### 권장 사항
+LDAP을 이해하려면 독특한 '주소 체계'를 알아야 합니다.
 
-1. 클라우드 우선 전략 채택 시 Entra ID를 기본 ID 공급자로 사용
-2. 레거시 앱이 있는 경우 하이브리드 구성 고려
-3. 조건부 접근 정책으로 Zero Trust 모델 구현
-4. PIM을 활용한 최소 권한 원칙 적용
+- **DIT (Directory Information Tree)**: 데이터가 저장되는 거대한 나무 구조
+- **엔트리(Entry)와 DN (Distinguished Name)**: 각 객체의 '고유 주소'
 
-## 참고 자료
+```
+CN=홍길동, OU=Architect, DC=solution, DC=com
+```
 
-- [Azure RBAC 공식 문서](https://learn.microsoft.com/azure/role-based-access-control/)
-- [Microsoft Entra ID 개요](https://learn.microsoft.com/entra/fundamentals/)
-- [PIM 구성 가이드](https://learn.microsoft.com/entra/id-governance/privileged-identity-management/)
+| 약어 | 의미 | 예시 |
+|---|---|---|
+| CN (Common Name) | 이름 | 홍길동 |
+| OU (Organizational Unit) | 조직 단위 | Architect |
+| DC (Domain Component) | 도메인 정보 | solution.com |
+
+- **동작 방식**: 클라이언트가 LDAP 서버에 `Bind(로그인)` → `Search(조회)` → `Unbind(로그아웃)` 순서로 요청
+
+### 2.3 왜 하필 LDAP을 여전히 쓰는가?
+
+#### 배경: 통합 인증의 시초
+
+과거에는 서버마다 사용자 계정을 따로 만들었습니다. 서버가 100대면 계정도 100개였죠. 이를 해결하기 위해 "중앙에 계정 서버 하나(LDAP)를 두고, 모든 서버가 여기 물어보게 하자"는 아이디어가 중앙 집중형 디렉터리 서비스의 시작입니다.
+
+#### 실무적 한계
+
+- **방화벽 친화적이지 않음**: LDAP은 고정 포트(389, 636)를 사용하며 TCP 기반으로 동작. 웹 기반의 현대적 환경(HTTP/HTTPS)에서는 연동하기가 매우 까다로움
+- **보안 취약성**: 기본 LDAP은 데이터를 평문으로 전송. 반드시 LDAPS(LDAP over SSL)를 사용하여 구간 암호화 필요
+- **스키마의 경직성**: 데이터 구조(Schema)를 한 번 정의하면 변경하기가 매우 어려움. 현대적인 JSON 형태의 유연한 데이터 구조와는 거리가 멂
+
+### 2.4 아키텍트의 실무 팁: LDAP 연동 시나리오
+
+- **사내 시스템 SSO 연동**: 오래된 사내 그룹웨어, VPN 장비(Cisco, Fortinet 등), NAS 저장소는 최신 인증인 OIDC를 지원하지 않는 경우가 많음. 이때 AD의 LDAP 기능을 활성화하여 이 장비들이 사용자 정보를 조회하게 구성
+- **리눅스 서버의 AD 통합**: 수백 대의 리눅스 서버에 일일이 계정을 만들 수 없으므로, `sssd`나 `winbind` 같은 데몬을 사용하여 리눅스 서버가 로그인 요청이 올 때마다 LDAP 서버에 물어보도록 구성
+- **클라우드에서의 대안 (Entra Domain Services)**: 클라우드 네이티브 앱은 LDAP을 쓰지 않지만, 클라우드로 옮겨온 '오래된 앱'들을 위해 Microsoft는 Entra Domain Services라는 관리형 LDAP 서비스를 제공
+
+---
+
+## 3. Active Directory vs. Microsoft Entra ID
+
+이 둘은 이름은 비슷하지만, 아키텍처 설계 관점에서는 완전히 다른 기술입니다.
+
+### 3.1 설계 관점의 차이: 경계 보안 vs. 제로 트러스트
+
+- **Active Directory (온프레미스)**: "우리 회사 네트워크(성벽) 안에 들어온 사람은 믿을 수 있다"는 **경계 보안(Perimeter Security)** 모델. 성벽 안으로 들어오기만 하면(VPN이나 사내망 접속), Kerberos 티켓을 통해 여러 자원에 쉽게 접근 가능
+- **Microsoft Entra ID (클라우드)**: "아무도 믿지 마라, 매번 검증하라"는 **제로 트러스트(Zero Trust)** 모델. 사용자가 사내망에 있든 카페에 있든 상관없이, 매 접속 시마다 사용자 신원, 기기 상태, 위치를 체크하여 접근을 결정
+
+### 3.2 핵심 프로토콜의 대결: Kerberos vs. HTTP 기반 모던 인증
+
+아키텍트에게 가장 중요한 차이점은 "어떤 언어로 대화하는가"입니다.
+
+#### AD: Kerberos/NTLM
+
+- **방식**: '티켓' 기반 인증. 사용자가 ID/PW를 입력하면 AD가 티켓을 주고, 사용자는 이 티켓을 서버에 보여주며 입장
+- **한계**: 티켓 방식은 방화벽을 통과하기 어렵고, 인터넷 환경에서 표준으로 쓰기엔 너무 무거움
+
+#### Kerberos 인증의 작동 원리 (3단계)
+
+마치 놀이공원(서버)에 가기 위해 매표소(KDC)에서 자유이용권(TGT)을 끊고, 개별 기구(Service)를 타는 과정과 비슷합니다.
+
+1. **인증 서비스 (AS) 요청**: 사용자가 로그인하면 KDC에 "나 누구인데, 마스터 티켓(TGT) 좀 줘"라고 요청
+2. **티켓 부여 서비스 (TGS) 요청**: 사용자가 특정 웹 서버에 접속하고 싶을 때, 가진 TGT를 KDC에 보여주며 "나 이 웹 서버 들어갈 수 있는 입장권(Service Ticket) 끊어줘"라고 요청
+3. **애플리케이션 서버 접속**: 획득한 서비스 티켓을 실제 웹 서버에 제출. 서버는 KDC에 물어볼 필요 없이 티켓의 정당성만 확인하고 입장을 허용
+
+> 💡 **Kerberos의 핵심 가치**:
+> - **상호 인증 (Mutual Authentication)**: 클라이언트가 서버를 믿는 것뿐만 아니라, 서버도 클라이언트가 가짜가 아닌지 확인. '중간자 공격(MitM)'을 원천 차단
+> - **단일 로그인 (SSO)**: 처음에 한 번만 비밀번호를 입력하면, 이후에는 티켓을 통해 여러 서버에 자동 로그인
+> - **제한 위임 (KCD)**: 서비스가 사용자를 대신하여 다른 서비스에 접근할 수 있도록 권한을 '위임'받는 보안 메커니즘
+
+#### NTLM (NT LAN Manager) 인증
+
+NTLM은 Kerberos가 도입되기 전까지 윈도우 네트워크의 표준이었으며, 현재도 Kerberos를 사용할 수 없는 환경(워크그룹 환경, IP 주소로 접속하는 경우 등)에서 하위 호환성을 위해 자동으로 사용됩니다.
+
+**작동 원리 (Challenge-Response)**:
+1. **Negotiate**: 클라이언트가 서버에 "나 로그인하고 싶어"라고 요청
+2. **Challenge**: 서버는 클라이언트에게 '난수(Nonce)'를 전송
+3. **Authenticate**: 클라이언트는 자신의 비밀번호 해시값을 이용해 받은 난수를 암호화하여 서버에 다시 전송. 서버는 자신이 가진 정보와 대조하여 인증을 승인
+
+#### Entra ID: OIDC/SAML/OAuth 2.0
+
+- **방식**: '토큰(Token)' 기반 인증. 웹 브라우저가 이해할 수 있는 HTTPS 메시지에 인증 정보를 실어 전송
+- **강점**: 전 세계 어디서든 표준 웹 브라우저만 있으면 인증이 가능하며, SaaS(Slack, Zoom 등) 연동에 최적화
+
+### 3.3 관리 객체의 차이: 계층형 구조 vs. 플랫(Flat) 구조
+
+- **AD**: OU(조직 단위) → Domain → Tree → Forest로 이어지는 복잡한 계층 구조. 그룹 정책(GPO)을 통해 PC의 바탕화면 변경 금지부터 보안 설정까지 세세하게 제어
+- **Entra ID**: 기본적으로 계층이 없는 플랫(Flat) 구조. 대신 '태그'나 '동적 그룹(Dynamic Group)'을 사용하여 사용자를 분류. PC 제어보다는 앱(Application)과 API에 대한 접근 권한 관리에 집중
+
+### 3.4 실무적 한계와 하이브리드 전략
+
+- **AD의 한계**: 클라우드 서비스(M365 등)와 직접 통신할 수 없음
+- **Entra ID의 한계**: Kerberos를 사용하는 오래된 레거시 앱이나 리눅스 서버의 직접적인 도메인 조인을 완벽히 대체하기 어려움
+
+**아키텍트의 해법 (Hybrid Identity)**:
+1. **Entra Connect**: 온프레미스 AD의 사용자를 클라우드로 복제하여 ID를 하나로 합침(SSO)
+2. **Entra Domain Services**: 클라우드 내부에 AD 기능을 하는 인스턴스를 띄워, 레거시 앱이 클라우드에서도 AD가 있는 것처럼 착각하게 만듦
+
+### 3.5 기술적 차이점 요약
+
+| 항목 | 온프레미스 Active Directory | Microsoft Entra ID |
+|---|---|---|
+| 핵심 프로토콜 | Kerberos, NTLM, LDAP | OIDC, OAuth 2.0, SAML |
+| 관리 대상 | 서버, PC, 사용자 (GPO 기반 관리) | 사용자, 앱, API 권한 (신원 중심) |
+| 접근 방식 | 내부망(Intranet) 중심 | 인터넷(Internet) 기반 어디서나 |
+| 보안 모델 | 경계 보안 (Firewall) | 제로 트러스트 (Identity) |
+
+---
+
+## 4. 실무 적용 시나리오: 아키텍처 구성 예시
+
+### 4.1 레거시 웹 앱의 클라우드 노출 (Header-based & KCD)
+
+- **배경**: 소스 코드 수정이 불가능한 오래된 웹 서버가 사내망에 있고, 이를 외부 직원이 쓰게 해야 함
+- **솔루션**: Entra Application Proxy를 전면에 배치
+- **흐름**:
+  1. 사용자가 외부 URL로 접속하면 Entra ID가 먼저 인증 및 MFA를 수행
+  2. 인증된 요청이 내부 커넥터로 전달되면, 커넥터가 이를 Kerberos 티켓으로 변환(KCD)하거나 HTTP Header에 신원 정보를 담아 내부 서버에 전달
+
+### 4.2 인프라 보안 강화 (SSH & RADIUS)
+
+- **SSH**: 정적인 `.pem` 키 파일을 관리하는 위험을 줄이기 위해, Entra ID가 발행하는 단기 인증서(Short-lived Certificate)를 사용하여 리눅스 서버에 접속
+- **RADIUS**: VPN이나 Wi-Fi 접속 시, 중간에 NPS(Network Policy Server) 확장을 두어 고전적인 RADIUS 요청을 클라우드 MFA와 연동
+
+#### RADIUS의 본질: "네트워크 보안 게이트"
+
+RADIUS는 건물 입구의 보안 게이트와 같습니다. 사원증(ID/PW)을 찍으면 게이트가 중앙 DB(RADIUS 서버)에 물어보고 문을 열어줄지 결정하며, 언제 들어오고 나갔는지 기록(Log)까지 남기는 시스템입니다.
+
+**AAA 체계의 구현**:
+- **Authentication (인증)**: "당신이 주장하는 그 사람이 맞습니까?"
+- **Authorization (인가)**: "당신은 이 네트워크 안에서 어디까지 갈 수 있습니까?"
+- **Accounting (계정 관리)**: "언제 접속해서 얼마나 데이터를 썼습니까?"
+
+---
+
+## 정리
+
+| 전략 | 핵심 | 적합한 환경 |
+|---|---|---|
+| DAC | 소유자가 임의로 권한 부여 | 소규모, 유연성 필요 |
+| MAC | 중앙 정책에 의한 강제 통제 | 군대, 정부, 금융 |
+| RBAC | 역할 기반 권한 관리 | 대부분의 기업 환경 |
+| ABAC | 속성 조합 실시간 판단 | 세밀한 제어가 필요한 환경 |
+
+> 💡 레거시 시스템은 AD + LDAP + Kerberos, 신규 서비스는 Entra ID + OIDC/OAuth 2.0, 그리고 이 둘을 잇는 **Entra Connect + Entra DS**가 하이브리드 아키텍처의 핵심입니다.
