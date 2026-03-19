@@ -5,7 +5,7 @@ permalink: /categories/
 author_profile: true
 ---
 
-{% assign main_categories = "Azure,AI,Terraform" | split: "," %}
+{% assign main_categories = "Azure,AI,Terraform,Tech Insights" | split: "," %}
 
 {% for main_cat in main_categories %}
 {% assign cat_posts = site.posts | where_exp: "post", "post.categories contains main_cat" %}
