@@ -665,7 +665,7 @@ html.dark-mode .toc a.is-active-link {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0 0 0.6em;
-  color: #666;
+  color: #555;
 }
 
 .page__footer-inner ul {
@@ -680,7 +680,7 @@ html.dark-mode .toc a.is-active-link {
 
 .page__footer-inner a {
   font-size: 0.85em;
-  color: #888;
+  color: #666;
   text-decoration: none;
   transition: color 0.2s;
 
@@ -691,7 +691,7 @@ html.dark-mode .toc a.is-active-link {
 
 .footer-about p {
   font-size: 0.82em;
-  color: #888;
+  color: #666;
   line-height: 1.5;
   margin: 0 0 0.5em;
 }
@@ -707,7 +707,7 @@ html.dark-mode .toc a.is-active-link {
     font-size: 0.7em;
     font-weight: 400;
     letter-spacing: 0;
-    color: #999 !important;
+    color: #777 !important;
   }
 }
 
@@ -724,7 +724,7 @@ html.dark-mode .footer-motto {
   text-align: center;
   padding: 1em;
   font-size: 0.78em;
-  color: #999;
+  color: #777;
   border-top: 1px solid #eee;
   max-width: $max-width;
   margin: 0 auto;
@@ -733,24 +733,24 @@ html.dark-mode .footer-motto {
 /* Footer 다크모드 */
 html.dark-mode {
   .page__footer-inner h4 {
-    color: #999;
+    color: #bbb;
   }
 
   .page__footer-inner a {
-    color: #888;
+    color: #aaa;
     &:hover { color: $primary-color; }
   }
 
   .footer-about p {
-    color: #888;
+    color: #aaa;
   }
 
   .footer-motto span {
-    color: #777 !important;
+    color: #bbb !important;
   }
 
   .page__footer-copyright {
-    color: #666;
+    color: #999;
     border-top-color: #333;
   }
 }
