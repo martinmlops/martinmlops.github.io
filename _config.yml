@@ -45,6 +45,9 @@ author:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/martinmlops"
+    - label: "Instagram"
+      icon: "fab fa-fw fa-instagram"
+      url: "https://www.instagram.com/_martlln"
 
 # ──────────────────────────────────────────────
 # 댓글 시스템 (Giscus)
