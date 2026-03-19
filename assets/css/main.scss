@@ -26,20 +26,20 @@ $x-large: 1400px;
   border: 3px solid $primary-color;
 }
 
-/* ── 사이드바 토글 버튼 ── */
+/* ── 사이드바 토글 버튼 (◀ 접기) ── */
 .sidebar-toggle {
   position: absolute;
   top: 4px;
   right: 4px;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   background: none;
   border: 1px solid $primary-color;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 10px;
-  line-height: 24px;
+  font-size: 13px;
+  line-height: 32px;
   text-align: center;
   color: $primary-color;
   transition: background 0.2s, color 0.2s;
@@ -97,12 +97,12 @@ $x-large: 1400px;
   }
 }
 
-/* ── 사이드바 복원 버튼 (뷰포트 좌측 상단 고정) ── */
+/* ── 사이드바 복원 버튼 (구분선 바로 아래 고정) ── */
 .sidebar-restore-btn {
   display: none;
   position: fixed;
-  top: 70px;
-  left: 12px;
+  top: 80px;
+  left: 20px;
   width: 32px;
   height: 32px;
   padding: 0;
