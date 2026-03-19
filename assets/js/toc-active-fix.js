@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var tocLinks = toc.querySelectorAll("a");
   if (!tocLinks.length) return;
 
-  // 헤딩 요소 수집
   var headings = [];
   tocLinks.forEach(function (link) {
     var id = link.getAttribute("href");
@@ -35,25 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (active) {
       active.link.classList.add("is-active-link");
-      // 부모 li도 활성화 (중첩 TOC)
-      var parent = active.link.closest("li");
-      while (parent) {
-        var parentLink = parent.querySelector(":scope > a");
-        if (parentLink) parentLink.classList.add("is-active-link");
-        var parentUl = parent.parentElement;
-        if (parentUl && parentUl.tagName === "UL") {
-          parent = parentUl.closest("li");
-        } else {
-          break;
-        }
-      }
     }
   }
-
-  // 테마 기본 TOC 활성화 비활성화 (충돌 방지)
-  var style = document.createElement("style");
-  style.textContent = ".toc a.active { font-weight: normal; color: inherit; }";
-  document.head.appendChild(style);
 
   var ticking = false;
   window.addEventListener("scroll", function () {

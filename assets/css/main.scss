@@ -439,16 +439,12 @@ html.dark-mode .sidebar-categories__list a {
   font-weight: normal !important;
 }
 
-/* ── TOC 활성 링크 (뷰포트 중앙 기준, 커스텀) ── */
+/* ── TOC 활성 링크 (뷰포트 중앙 기준, 하나만 강조) ── */
 .toc a.is-active-link {
-  color: #fff !important;
+  background: rgba(0, 0, 0, 0.05) !important;
   font-weight: 600 !important;
-  background: $primary-color !important;
-  border-radius: 3px;
-  padding: 1px 4px;
 }
 
 html.dark-mode .toc a.is-active-link {
-  color: #181a1b !important;
-  background: lighten($primary-color, 10%) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
