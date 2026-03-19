@@ -1,0 +1,48 @@
+{% assign locale = include.locale | default: site.locale %}
+{% unless site.atom_feed.hide %}
+  {% assign show_atom = true %}
+{% endunless %}
+
+<div class="page__footer-inner">
+
+  <!-- 카테고리 바로가기 -->
+  <div class="footer-categories">
+    <h4>Categories</h4>
+    <ul>
+      <li><a href="/categories/azure/">Azure</a></li>
+      <li><a href="/categories/ai/">AI</a></li>
+      <li><a href="/categories/terraform/">Terraform</a></li>
+      <li><a href="/categories/tech-insights/">Tech Insights</a></li>
+    </ul>
+  </div>
+
+  <!-- 바로가기 -->
+  <div class="footer-links">
+    <h4>Links</h4>
+    <ul>
+      <li><a href="/categories/">All Categories</a></li>
+      <li><a href="/tags/">Tags</a></li>
+      {% unless site.atom_feed.hide %}
+      <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | relative_url }}{% endif %}"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> RSS Feed</a></li>
+      {% endunless %}
+    </ul>
+  </div>
+
+  <!-- 소개 -->
+  <div class="footer-about">
+    <h4>About</h4>
+    <p>Azure, Kubernetes, AI, DevOps 등 클라우드 인프라와 최신 기술 트렌드를 다루는 기술 블로그입니다.</p>
+    {% if site.author.links %}
+      <ul class="footer-social">
+        {% for link in site.author.links %}
+          {% if link.label and link.url %}
+            <li><a href="{{ link.url }}" rel="nofollow noopener noreferrer"><i class="{{ link.icon | default: 'fas fa-link' }}" aria-hidden="true"></i> {{ link.label }}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+</div>
+
+<div class="page__footer-copyright">&copy; {% assign site_time = site.time | date: '%Y' %}{% if site.footer.since and site_time != site.footer.since %}{{ site.footer.since }} - {% endif %}{{ site_time }} <a href="{{ site.copyright_url | default: site.url }}">{{ site.copyright | default: site.title | escape_once | strip }}</a>. All rights reserved.</div>

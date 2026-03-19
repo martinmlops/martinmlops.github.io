@@ -643,3 +643,104 @@ html.dark-mode .toc a.is-active-link {
   background-color: rgba(196, 188, 245, 0.15) !important;
   color: #C4BCF5 !important;
 }
+
+/* ── 커스텀 Footer ── */
+.page__footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  padding: 2em 1em 1em;
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+.page__footer-inner > div {
+  flex: 1;
+  min-width: 180px;
+}
+
+.page__footer-inner h4 {
+  font-size: 0.85em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.6em;
+  color: #666;
+}
+
+.page__footer-inner ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page__footer-inner li {
+  margin: 0.3em 0;
+}
+
+.page__footer-inner a {
+  font-size: 0.85em;
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.footer-about p {
+  font-size: 0.82em;
+  color: #888;
+  line-height: 1.5;
+  margin: 0 0 0.5em;
+}
+
+.footer-social {
+  display: flex;
+  gap: 1em;
+}
+
+.page__footer-copyright {
+  text-align: center;
+  padding: 1em;
+  font-size: 0.78em;
+  color: #999;
+  border-top: 1px solid #eee;
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+/* Footer 다크모드 */
+html.dark-mode {
+  .page__footer-inner h4 {
+    color: #999;
+  }
+
+  .page__footer-inner a {
+    color: #888;
+    &:hover { color: $primary-color; }
+  }
+
+  .footer-about p {
+    color: #888;
+  }
+
+  .page__footer-copyright {
+    color: #666;
+    border-top-color: #333;
+  }
+}
+
+/* Footer 모바일 */
+@media (max-width: 600px) {
+  .page__footer-inner {
+    flex-direction: column;
+    gap: 1.2em;
+    padding: 1.5em 1em 0.5em;
+  }
+
+  .page__footer-inner > div {
+    min-width: 100%;
+  }
+}
