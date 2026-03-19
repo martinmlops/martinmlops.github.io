@@ -432,19 +432,26 @@ html.dark-mode .sidebar-categories__list a {
 
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */
 
-/* ── TOC: 테마 기본 active 스타일 제거 ── */
-.toc .active {
+/* ── TOC: 테마 기본 active 스타일 완전 제거 ── */
+.toc .active,
+.toc a.active,
+.toc li.active > a,
+.nav__list .active,
+.toc__menu .active {
   background: none !important;
+  background-color: transparent !important;
   color: inherit !important;
   font-weight: normal !important;
 }
 
 /* ── TOC 활성 링크 (뷰포트 중앙 기준, 하나만 강조) ── */
 .toc a.is-active-link {
-  background: rgba(0, 0, 0, 0.05) !important;
-  font-weight: 600 !important;
+  background-color: rgba(196, 188, 245, 0.2) !important;
+  color: #7B6FC4 !important;
+  font-weight: 700 !important;
 }
 
 html.dark-mode .toc a.is-active-link {
-  background: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(196, 188, 245, 0.15) !important;
+  color: #C4BCF5 !important;
 }

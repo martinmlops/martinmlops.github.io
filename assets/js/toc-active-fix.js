@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     tocLinks.forEach(function (link) {
       link.classList.remove("is-active-link");
+      link.classList.remove("active");
+      if (link.parentElement) link.parentElement.classList.remove("active");
     });
 
     if (active) {
