@@ -761,8 +761,18 @@ html.dark-mode {
 
 /* ── 페이지네이션 가운데 정렬 ── */
 .pagination {
-  justify-content: center;
+  display: flex !important;
+  justify-content: center !important;
   text-align: center;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.paginator {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Footer 모바일 */
