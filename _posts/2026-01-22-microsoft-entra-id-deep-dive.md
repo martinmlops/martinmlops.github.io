@@ -1,7 +1,7 @@
 ---
 title: "Microsoft Entra ID & Domain Services 완벽 가이드"
 date: 2026-01-22
-categories: [Azure, Identity]
+categories: [Azure, Microsoft Entra ID]
 tags: [Microsoft Entra ID, Azure AD, Entra Domain Services, SSO, MFA, 조건부 액세스, Zero Trust, Trust Fabric]
 toc: true
 toc_sticky: true

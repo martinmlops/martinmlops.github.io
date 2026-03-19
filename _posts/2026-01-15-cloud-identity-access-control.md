@@ -1,7 +1,7 @@
 ---
 title: "클라우드 아이덴티티 및 접근 제어 Deep Dive"
 date: 2026-01-15
-categories: [Azure, Identity]
+categories: [Azure, 클라우드 아이덴티티]
 tags: [접근 제어, RBAC, ABAC, LDAP, Active Directory, Entra ID, Kerberos, Zero Trust, PIM]
 toc: true
 toc_sticky: true
