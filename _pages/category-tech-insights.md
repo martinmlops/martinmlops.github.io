@@ -9,10 +9,10 @@ author_profile: true
 
 ## 하위 카테고리
 
-{% assign ti_posts = site.posts | where_exp: "post", "post.categories contains 'Tech Insights'" %}
+{% assign cat_posts = site.posts | where_exp: "post", "post.categories contains 'Tech Insights'" %}
 {% assign sub_categories = "" %}
 
-{% for post in ti_posts %}
+{% for post in cat_posts %}
   {% if post.categories.size > 1 %}
     {% assign sub = post.categories[1] %}
   {% else %}
@@ -31,7 +31,7 @@ author_profile: true
 
 {% for sub in sub_array %}
 {% assign count = 0 %}
-{% for post in ti_posts %}
+{% for post in cat_posts %}
   {% if post.categories.size > 1 %}{% assign ps = post.categories[1] %}{% else %}{% assign ps = "기타" %}{% endif %}
   {% if ps == sub %}{% assign count = count | plus: 1 %}{% endif %}
 {% endfor %}
@@ -41,11 +41,11 @@ author_profile: true
 
 ---
 
-{% assign all_ti_posts = site.posts | where_exp: "post", "post.categories contains 'Tech Insights'" | sort: "date" | reverse %}
+{% assign all_posts = site.posts | where_exp: "post", "post.categories contains 'Tech Insights'" | sort: "date" | reverse %}
 
-## 전체 포스트 ({{ all_ti_posts.size }})
+## 전체 포스트 ({{ all_posts.size }})
 
-{% for post in all_ti_posts %}
+{% for post in all_posts %}
 ### [{{ post.title }}]({{ post.url }})
 <small>{{ post.date | date: "%Y-%m-%d" }} · {{ post.categories | join: " > " }}</small>
 
