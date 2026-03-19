@@ -40,16 +40,20 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem(STORAGE_KEY, "false");
   }
 
-  // 페이지 로드 시 이전 상태 복원
-  if (localStorage.getItem(STORAGE_KEY) === "true") {
+  // 페이지 로드 시 이전 상태 복원 (데스크톱만)
+  function isDesktop() {
+    return window.innerWidth >= 1024;
+  }
+
+  if (isDesktop() && localStorage.getItem(STORAGE_KEY) === "true") {
     collapseSidebar();
   }
 
   btn.addEventListener("click", function () {
-    collapseSidebar();
+    if (isDesktop()) collapseSidebar();
   });
 
   restoreBtn.addEventListener("click", function () {
-    expandSidebar();
+    if (isDesktop()) expandSidebar();
   });
 });

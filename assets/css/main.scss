@@ -167,6 +167,170 @@ html.dark-mode .sidebar-restore-btn {
   }
 }
 
+/* ── 모바일 반응형: 사이드바 겹침 방지 ── */
+@media (max-width: 1023px) {
+  /* 사이드바를 본문 위에 블록으로 배치 (겹침 방지) */
+  .sidebar.sticky {
+    position: relative !important;
+    top: auto !important;
+    float: none !important;
+    width: 100% !important;
+    margin-bottom: 1.5em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* h-card 높이 제한 해제 */
+  .sidebar .h-card {
+    min-height: auto !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8em;
+  }
+
+  /* 프로필 사진 축소 */
+  .author__avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  .author__avatar img {
+    max-width: 80px !important;
+    width: 80px !important;
+    height: 80px !important;
+  }
+
+  /* 이름/바이오 가로 배치 */
+  .author__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .author__name {
+    font-size: 1em;
+    margin: 0;
+  }
+
+  .author__bio {
+    font-size: 0.8em;
+    margin: 0.2em 0 0;
+  }
+
+  /* 카테고리 네비게이션 가로 배치 */
+  .sidebar-categories {
+    width: 100%;
+    border-top: none;
+    border-bottom: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar-categories__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+
+    li {
+      border-bottom: none;
+      padding: 0;
+    }
+
+    a {
+      display: inline-block;
+      padding: 0.3em 0.7em;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      font-size: 0.78em;
+      white-space: nowrap;
+    }
+  }
+
+  /* Follow 버튼 및 소셜 링크 간소화 */
+  .author__urls-wrapper {
+    width: 100%;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+
+    .btn--inverse {
+      display: none;
+    }
+
+    .author__urls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+      padding: 0;
+      margin: 0;
+
+      &::before {
+        display: none;
+      }
+
+      li {
+        white-space: nowrap;
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  /* 사이드바 접기 관련 비활성화 */
+  .sidebar-toggle,
+  .sidebar-restore-btn {
+    display: none !important;
+  }
+
+  .sidebar.sticky.collapsed {
+    position: relative !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    flex: 1 1 100% !important;
+    overflow: visible;
+  }
+
+  .sidebar.sticky.collapsed .sidebar-content {
+    display: block;
+  }
+
+  #main.sidebar-collapsed .sidebar {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+/* ── 모바일 다크모드 보정 ── */
+@media (max-width: 1023px) {
+  html.dark-mode .sidebar.sticky {
+    border-bottom-color: #333;
+  }
+
+  html.dark-mode .sidebar-categories__list a {
+    border-color: #444;
+  }
+}
+
+/* ── 테이블 모바일 스크롤 ── */
+@media (max-width: 768px) {
+  .page__content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* Mermaid 다이어그램 스크롤 */
+  .mermaid {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 코드 블록 폰트 축소 */
+  .page__content pre {
+    font-size: 0.78em;
+  }
+}
+
 /* ── 다크모드 토글 버튼 ── */
 .theme-toggle {
   background: none;
