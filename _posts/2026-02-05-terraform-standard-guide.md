@@ -180,6 +180,11 @@ locals {
 ```bash
 RESOURCE_GROUP="rg-terraform-state"
 STORAGE_ACCOUNT="stterraformstate$(openssl rand -hex 4)"
+CONTAINER="tfstate"
+LOCATION="koreacentral"
+
+# Resource Group
+az group create --name $RESOURCE_GROUP --location $LOCATION
 
 # Storage Account 생성 (TLS 1.2, Public Access 차단)
 az storage account create \
@@ -199,6 +204,27 @@ az lock create \
   --name "CanNotDelete" \
   --resource-group $RESOURCE_GROUP \
   --lock-type CanNotDelete
+```
+
+### Backend 구성
+
+```hcl
+# backend.tf
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "rg-terraform-state"
+    storage_account_name = "stterraformstatexxxx"
+    container_name       = "tfstate"
+    key                  = "prod/platform.tfstate"
+  }
+}
+```
+
+환경별로 `key` 값을 다르게 설정하여 State를 분리합니다:
+
+```bash
+# 초기화 (환경별 backend 설정 파일 사용)
+terraform init -backend-config=backend.hcl
 ```
 
 ### State 분리 전략
@@ -382,6 +408,27 @@ tfplan
 | checkov | Policy as Code | `checkov -d .` |
 | infracost | 비용 예측 | `infracost breakdown --path .` |
 
+### 통합 검증 스크립트
+
+```bash
+#!/bin/bash
+set -e
+
+echo "=== Formatting ==="
+terraform fmt -check -recursive
+
+echo "=== Validation ==="
+terraform validate
+
+echo "=== Linting ==="
+tflint --recursive
+
+echo "=== Security Scan ==="
+tfsec .
+
+echo "=== All checks passed! ==="
+```
+
 ---
 
 ## 10. 실수 방지 체크리스트
@@ -415,3 +462,18 @@ tfplan
 - [Terraform Best Practices](https://www.terraform-best-practices.com)
 - [tfsec](https://github.com/aquasecurity/tfsec)
 - [tflint](https://github.com/terraform-linters/tflint)
+
+---
+
+## Appendix: 주요 Terraform 명령어
+
+| 명령어 | 설명 |
+|---|---|
+| `terraform init` | Working directory 초기화, Provider 다운로드 |
+| `terraform plan` | 변경 계획 확인 (Dry Run) |
+| `terraform apply` | 변경 사항 적용 |
+| `terraform destroy` | 모든 리소스 삭제 |
+| `terraform output` | 출력 값 확인 |
+| `terraform refresh` | State와 실제 리소스 동기화 |
+| `terraform graph` | 리소스 의존성 그래프 생성 |
+| `terraform workspace` | 환경 관리 (Workspace) |

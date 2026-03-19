@@ -262,6 +262,21 @@ Priority 300: Allow SQL from App Subnet
 Priority 4096: Deny All (기본 규칙)
 ```
 
+> 우선순위 숫자가 낮을수록 먼저 평가됩니다. 100~200 사이에 핵심 허용 규칙을 배치하고, 나머지는 기본 Deny로 차단합니다. 규칙 간 100 단위 간격을 두면 나중에 중간에 규칙을 추가하기 쉽습니다.
+
+### 서브넷 크기 설계 팁
+
+| 서브넷 용도 | 권장 크기 | 가용 호스트 | 비고 |
+|---|---|---|---|
+| GatewaySubnet | /27 | 27개 | VPN/ExpressRoute 전용 |
+| AzureFirewallSubnet | /26 | 59개 | Firewall 전용 (최소 /26) |
+| AzureBastionSubnet | /26 | 59개 | Bastion 전용 (최소 /26) |
+| Web Tier | /24 | 251개 | 웹 서버 |
+| App Tier | /24 | 251개 | 애플리케이션 서버 |
+| Data Tier | /24 | 251개 | 데이터베이스 |
+
+> Azure는 각 서브넷에서 5개의 IP를 예약합니다 (.0, .1, .2, .3, .255). /24 서브넷의 실제 가용 호스트는 251개입니다.
+
 ## 참고 자료
 
 - [Azure 네트워킹 문서](https://learn.microsoft.com/azure/networking/)

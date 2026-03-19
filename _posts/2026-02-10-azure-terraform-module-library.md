@@ -175,12 +175,29 @@ App Service + PostgreSQL Flexible Server 구성:
 - **Network**: VNet, Subnets, NSG
 - **Services**: App Service (Node.js), PostgreSQL, Private DNS
 
+```bash
+# 자동 배포
+./deploy/scripts/deploy-all.sh components/scenarios/01.simple-web-app
+
+# 수동 배포 (레이어별)
+cd components/scenarios/01.simple-web-app/00.governance
+terraform init && terraform apply
+
+cd ../01.network
+terraform init && terraform apply
+
+cd ../02.services
+terraform init && terraform apply
+```
+
 ### 추가 시나리오 (예정)
 
-- AKS Microservices — AKS + ACR + Key Vault
-- AI Workload — AI Foundry + Cognitive Services
-- Data Platform — Cosmos DB + Synapse
-- Enterprise Hub-Spoke — Hub-Spoke 네트워크
+| 시나리오 | 구성 |
+|---|---|
+| AKS Microservices | AKS + ACR + Key Vault |
+| AI Workload | AI Foundry + Cognitive Services |
+| Data Platform | Cosmos DB + Synapse |
+| Enterprise Hub-Spoke | Hub-Spoke 네트워크 |
 
 ---
 
@@ -200,6 +217,33 @@ App Service + PostgreSQL Flexible Server 구성:
 - Private Endpoints 사용
 - NSG 최소 권한 원칙
 - VNet 통합 활성화
+
+---
+
+## 8. 트러블슈팅
+
+| 문제 | 해결 방법 |
+|---|---|
+| State Lock 오류 | `terraform force-unlock <lock-id>` |
+| 모듈 초기화 오류 | `rm -rf .terraform && terraform init` |
+| State 참조 오류 | 이전 레이어 배포 확인 → State 파일 경로 확인 → 출력 변수 이름 확인 |
+
+---
+
+## 9. 기여 가이드
+
+새 모듈 추가 시 표준 구조를 따릅니다:
+
+```
+modules/new-module/
+├── main.tf          # 리소스 정의
+├── variables.tf     # 입력 변수 (description 필수)
+├── outputs.tf       # 출력 값 (description 필수)
+├── versions.tf      # Provider 버전
+└── README.md        # 문서
+```
+
+배포 전 반드시 `terraform fmt -recursive` 및 `terraform validate`를 실행합니다.
 
 ---
 

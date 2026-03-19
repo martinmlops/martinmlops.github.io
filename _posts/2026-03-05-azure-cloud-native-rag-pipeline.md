@@ -85,11 +85,12 @@ class AzureSearchRetriever(BaseRetriever):
     def _get_relevant_documents(
         self, query: str, *, run_manager: Any = None, **kwargs: Any
     ) -> List[Document]:
-        # k 중복 에러 방지를 위해 직접 hybrid_search 호출
+        # k 중복 에러 방지를 위해 직접 hybrid_search 호출 및 kwargs 무시
+        print(f"[Retriever] Searching for: {query}")
         return self.vector_store.hybrid_search(query, k=self.k)
 ```
 
-> 라이브러리의 `k` 인자 중복 오류를 방지하기 위해 `hybrid_search`를 직접 호출하는 로직을 구현했습니다.
+> `AzureSearch`의 `as_retriever()` 메서드에서 `k` 인자가 내부적으로 중복 전달되는 버그가 있습니다. 이를 우회하기 위해 `BaseRetriever`를 상속받아 `hybrid_search`를 직접 호출하는 커스텀 리트리버를 구현했습니다. `kwargs`를 무시하여 중복 인자 문제를 원천 차단합니다.
 
 ---
 
@@ -144,29 +145,59 @@ rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chai
 
 ### Flask 서버 (세션 관리)
 
+서버 메모리에 세션별 대화 이력을 딕셔너리로 관리합니다. RAG 체인은 싱글톤 패턴으로 초기화하여 매 요청마다 재생성하지 않습니다.
+
 ```python
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from langchain_core.messages import HumanMessage, AIMessage
 
 app = Flask(__name__)
+CORS(app)
+
+# RAG 체인 싱글톤
+_rag_chain = None
+# 세션별 대화 이력 저장 (서버 메모리)
+chat_histories = {}
+
+def get_chain():
+    global _rag_chain
+    if _rag_chain is None:
+        from src.rag_agent import get_rag_chain
+        _rag_chain = get_rag_chain()
+    return _rag_chain
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    session_id = request.json.get('session_id')
-    question = request.json.get('question')
-    
-    # 세션별 chat_history 관리 (최대 10개 메시지 유지)
-    chat_history = get_chat_history(session_id)
-    
-    response = rag_chain.invoke({
+    data = request.get_json(silent=True)
+    session_id = data.get('session_id', 'default_session')
+    question = data.get('question', '').strip()
+
+    if session_id not in chat_histories:
+        chat_histories[session_id] = []
+
+    chain = get_chain()
+    response = chain.invoke({
         "input": question,
-        "chat_history": chat_history
+        "chat_history": chat_histories[session_id]
     })
-    
-    # 히스토리 업데이트
-    update_chat_history(session_id, question, response["answer"])
-    
-    return jsonify({"answer": response["answer"]})
+    answer = response["answer"]
+
+    # 대화 이력 업데이트
+    chat_histories[session_id].append(HumanMessage(content=question))
+    chat_histories[session_id].append(AIMessage(content=answer))
+
+    # 최근 10개 메시지만 유지 (토큰 관리 및 성능 목적)
+    if len(chat_histories[session_id]) > 10:
+        chat_histories[session_id] = chat_histories[session_id][-10:]
+
+    return jsonify({'answer': answer})
 ```
+
+**설계 포인트:**
+- `HumanMessage`/`AIMessage` 객체로 대화 이력을 구조화하여 LangChain 체인에 직접 전달
+- 세션당 최대 10개 메시지로 제한하여 토큰 초과 및 메모리 누수 방지
+- `flask_cors`로 프론트엔드 크로스 오리진 요청 허용
 
 ---
 
@@ -208,13 +239,38 @@ vector_store = AzureSearch(
 
 ---
 
+### 비밀 관리 (Config)
+
+API 키와 엔드포인트는 `.env` 파일을 1순위로, Azure Key Vault를 2순위로 조회하는 계층적 비밀 관리 패턴을 적용합니다.
+
+```python
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+def get_secret(secret_name: str) -> str:
+    """1순위: 로컬 환경 변수 (.env), 2순위: Azure Key Vault"""
+    value = os.getenv(secret_name)
+    if value:
+        return value
+
+    # Azure Key Vault 폴백
+    credential = DefaultAzureCredential()
+    client = SecretClient(vault_url=KEY_VAULT_URL, credential=credential)
+    return client.get_secret(secret_name).value
+```
+
+로컬 개발 시에는 `.env` 파일로 빠르게 설정하고, 프로덕션(Azure VM)에서는 Key Vault를 통해 비밀을 안전하게 관리합니다.
+
+---
+
 ## 5. 이슈 해결 기록
 
 | 이슈 | 원인 | 해결 방법 |
 |---|---|---|
-| PDF 폰트 호환성 | macOS 기본 폰트 PostScript 미지원 | `Arial Unicode.ttf`로 교체 |
-| 검색 성능 | 리트리버 k 인자 중복 버그 | 커스텀 리트리버 구현 |
+| PDF 폰트 호환성 | macOS 기본 폰트(`AppleSDGothicNeo.ttc`) PostScript 미지원 | `Arial Unicode.ttf`로 교체 |
+| 검색 성능 | `AzureSearch` 리트리버의 `k` 인자 중복 버그 | `BaseRetriever` 상속 커스텀 리트리버 구현 |
 | 메모리 관리 | 대화 이력 무한 증가 | 세션당 최대 10개 메시지 제한 |
+| 테마 전환 | 기업 규정 → 유튜버 정보 서비스 | Agent Prompt + UI strings 일괄 변경 |
 
 ---
 

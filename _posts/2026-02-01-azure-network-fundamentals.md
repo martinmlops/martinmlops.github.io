@@ -213,6 +213,25 @@ NVA가 정상 작동하려면 두 가지 설정이 반드시 필요합니다:
 
 **고가용성**: Azure Load Balancer(Standard)를 NVA 앞에 배치하여 HA Ports 규칙을 사용하거나, Azure Route Server를 연동하여 동적 라우팅을 구성합니다.
 
+### NVA 라우팅 구성 예시
+
+```
+[Web Subnet] → UDR: 0.0.0.0/0 → NVA(10.0.0.4)
+                                      ↓
+                              [패킷 검사/필터링]
+                                      ↓
+                              [인터넷 또는 다른 서브넷]
+```
+
+```json
+{
+  "name": "Force-Internet-Through-NVA",
+  "addressPrefix": "0.0.0.0/0",
+  "nextHopType": "VirtualAppliance",
+  "nextHopIpAddress": "10.0.0.4"
+}
+```
+
 ## 참고 자료
 
 - [Azure VNet 개념 설계 가이드](https://learn.microsoft.com/azure/virtual-network/)

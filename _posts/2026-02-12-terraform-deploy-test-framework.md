@@ -276,6 +276,24 @@ jobs:
 
 ---
 
+## 7. 전체 테스트 실행
+
+```bash
+# 단위 테스트만
+cd tests/unit && ./run-unit-tests.sh
+
+# 통합 테스트만 (Terratest)
+cd tests/integration && go test -v -timeout 60m
+
+# 전체 테스트 (단위 + 통합)
+cd tests/scripts && ./run-all-tests.sh
+
+# 사전 검증만 (배포 전 빠른 체크)
+./tests/scripts/pre-deploy-check.sh components/scenarios/01.simple-web-app
+```
+
+---
+
 ## 트러블슈팅
 
 | 문제 | 해결 방법 |

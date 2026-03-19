@@ -21,9 +21,30 @@ LangChain의 Document는 두 가지 주요 속성을 가집니다:
 - **page_content**: 실제 텍스트 내용
 - **metadata**: 소스, 페이지 번호, 생성일 등 메타정보
 
+### 필수 패키지
+
+```bash
+pip install langchain langchain-openai langchain-text-splitters langchain-community langchain-core
+pip install bs4 PyMuPDF jq  # 파일 형식별 추가 패키지
+```
+
+### 로더 클래스 임포트
+
+```python
+from langchain_community.document_loaders import (
+    TextLoader,       # 일반 텍스트 파일 (.txt)
+    CSVLoader,        # CSV 파일
+    JSONLoader,       # JSON 파일
+    PyMuPDFLoader,    # PDF 파일
+    WebBaseLoader     # 웹페이지 (HTML)
+)
+```
+
 ---
 
 ### 1. TXT 파일 로딩
+
+가장 기본적인 로더로, 파일 전체를 하나의 Document 객체로 변환합니다.
 
 ```python
 from langchain_community.document_loaders import TextLoader
@@ -31,7 +52,8 @@ from langchain_community.document_loaders import TextLoader
 loader = TextLoader("files/azure_ai_guide.txt", encoding='utf-8')
 txt_docs = loader.load()
 
-print(f"로드된 문서 수: {len(txt_docs)}")
+print(f"로드된 문서 수: {len(txt_docs)}")       # 1
+print(f"문서 타입: {type(txt_docs[0])}")         # Document
 print(txt_docs[0].page_content[:200])
 print(txt_docs[0].metadata)
 # {'source': 'files/azure_ai_guide.txt'}
@@ -39,11 +61,13 @@ print(txt_docs[0].metadata)
 
 > 한글 파일은 반드시 `encoding='utf-8'` 지정이 필요합니다.
 
+**사용 시나리오:** 기술 문서, 매뉴얼, 소설, 로그 파일, 설정 파일
+
 ---
 
 ### 2. CSV 파일 로딩
 
-각 행이 하나의 Document 객체로 변환됩니다.
+각 행이 하나의 Document 객체로 변환됩니다. 헤더 행이 컬럼명으로 사용되며, 각 데이터 행의 컬럼값들이 `key: value` 형태로 조합되어 `page_content`에 저장됩니다.
 
 ```python
 from langchain_community.document_loaders import CSVLoader
@@ -51,9 +75,19 @@ from langchain_community.document_loaders import CSVLoader
 loader = CSVLoader("files/sample_products.csv", encoding='utf-8')
 csv_docs = loader.load()
 # 10개 행 → 10개 Document 객체
+
+print(csv_docs[0].page_content)
+# product_id: 1
+# product_name: Azure AI Services
+# category: Cloud Computing
+# price: 299.99
+# ...
+
+print(csv_docs[0].metadata)
+# {'source': 'files/sample_products.csv', 'row': 0}
 ```
 
-CSV의 각 행은 `key: value` 형태로 `page_content`에 저장됩니다.
+**사용 시나리오:** 제품 카탈로그, 고객 데이터, FAQ, 지식베이스
 
 ---
 
@@ -82,7 +116,7 @@ json_docs = loader.load()
 
 ### 4. PDF 파일 로딩
 
-각 페이지가 별도의 Document 객체로 생성됩니다.
+각 페이지가 별도의 Document 객체로 생성됩니다. 메타데이터에 페이지 번호(`page`)가 자동 포함됩니다.
 
 ```python
 from langchain_community.document_loaders import PyMuPDFLoader
@@ -90,7 +124,14 @@ from langchain_community.document_loaders import PyMuPDFLoader
 loader = PyMuPDFLoader("files/sample.pdf")
 pdf_docs = loader.load()
 # 25페이지 → 25개 Document 객체
+
+print(pdf_docs[0].metadata)
+# {'source': 'files/sample.pdf', 'page': 0, 'total_pages': 25, ...}
 ```
+
+> 이미지나 복잡한 레이아웃은 텍스트 추출이 어려울 수 있습니다. 텍스트만 추출되며, 표는 제외될 수 있습니다.
+
+**사용 시나리오:** 기술 문서, 연구 논문, 보고서, 법률 문서, 계약서
 
 ---
 
