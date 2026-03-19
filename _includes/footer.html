@@ -22,9 +22,6 @@
     <ul>
       <li><a href="/categories/">All Categories</a></li>
       <li><a href="/tags/">Tags</a></li>
-      {% unless site.atom_feed.hide %}
-      <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | relative_url }}{% endif %}"><i class="fas fa-fw fa-square-rss" aria-hidden="true"></i> RSS Feed</a></li>
-      {% endunless %}
     </ul>
   </div>
 
@@ -33,15 +30,6 @@
     <h4>About</h4>
     <p>Azure, Kubernetes, AI, DevOps 등 클라우드 인프라와 최신 기술 트렌드를 다루는 기술 블로그입니다.</p>
     <p class="footer-motto">水滴穿石 <span>— 꾸준함이 비범함을 만듭니다. 감사합니다.</span></p>
-    {% if site.author.links %}
-      <ul class="footer-social">
-        {% for link in site.author.links %}
-          {% if link.label and link.url %}
-            <li><a href="{{ link.url }}" rel="nofollow noopener noreferrer"><i class="{{ link.icon | default: 'fas fa-link' }}" aria-hidden="true"></i> {{ link.label }}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endif %}
   </div>
 
 </div>

@@ -542,6 +542,10 @@ html.dark-mode {
     color: $primary-color;
   }
 
+  .pagination {
+    border-color: #333;
+  }
+
   /* 입력 필드 */
   input, textarea, select {
     background-color: #1e2021;
@@ -753,6 +757,12 @@ html.dark-mode {
     color: #999;
     border-top-color: #333;
   }
+}
+
+/* ── 페이지네이션 가운데 정렬 ── */
+.pagination {
+  justify-content: center;
+  text-align: center;
 }
 
 /* Footer 모바일 */
