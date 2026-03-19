@@ -65,17 +65,28 @@ $x-large: 1400px;
   display: none;
 }
 
-.sidebar.sticky.collapsed .sidebar-toggle {
+.sidebar.sticky.collapsed {
   position: static;
+  width: 0 !important;
+  min-width: 0 !important;
+  flex: 0 0 0 !important;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar.sticky.collapsed .sidebar-toggle {
+  display: none;
 }
 
 /* ── 사이드바 접힘 시 콘텐츠 확장 ── */
 #main.sidebar-collapsed {
   .sidebar {
-    flex: 0 0 auto;
-    width: auto;
+    flex: 0 0 0;
+    width: 0;
     min-width: 0;
-    margin-right: 2em;
+    margin: 0;
+    padding: 0;
   }
 
   article.page,
@@ -83,6 +94,46 @@ $x-large: 1400px;
     width: 100%;
     flex: 1;
     min-width: 0;
+  }
+}
+
+/* ── 사이드바 복원 버튼 (콘텐츠 상단) ── */
+.sidebar-restore-btn {
+  display: none;
+  position: sticky;
+  top: 2em;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: #fff;
+  border: 1px solid $primary-color;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 28px;
+  text-align: center;
+  color: $primary-color;
+  transition: background 0.2s, color 0.2s;
+  z-index: 10;
+  margin-bottom: 0.5em;
+}
+
+.sidebar-restore-btn:hover {
+  background: $primary-color;
+  color: #fff;
+}
+
+#main.sidebar-collapsed .sidebar-restore-btn {
+  display: inline-block;
+}
+
+html.dark-mode .sidebar-restore-btn {
+  background: #1e2021;
+  border-color: rgba($primary-color, 0.6);
+  color: $primary-color;
+  &:hover {
+    background: $primary-color;
+    color: #181a1b;
   }
 }
 
@@ -96,6 +147,9 @@ $x-large: 1400px;
 @media (max-width: 768px) {
   .sidebar-toggle {
     display: none;
+  }
+  .sidebar-restore-btn {
+    display: none !important;
   }
 }
 
