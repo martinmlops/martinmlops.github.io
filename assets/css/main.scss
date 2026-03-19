@@ -432,10 +432,18 @@ html.dark-mode .sidebar-categories__list a {
 
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */
 
-/* ── TOC 활성 링크 (뷰포트 중앙 기준) ── */
+/* ── TOC: 테마 기본 active 스타일 제거 ── */
+.toc .active {
+  background: none !important;
+  color: inherit !important;
+  font-weight: normal !important;
+}
+
+/* ── TOC 활성 링크 (뷰포트 중앙 기준, 커스텀) ── */
 .toc a.is-active-link {
   color: $primary-color !important;
-  font-weight: 600;
+  font-weight: 600 !important;
+  background: none !important;
 }
 
 html.dark-mode .toc a.is-active-link {
