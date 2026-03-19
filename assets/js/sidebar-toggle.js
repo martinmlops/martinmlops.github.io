@@ -6,14 +6,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var restoreBtn = document.createElement("button");
   restoreBtn.className = "sidebar-restore-btn";
-  restoreBtn.setAttribute("aria-label", "사이드바 열기");
+  restoreBtn.setAttribute("aria-label", "\uc0ac\uc774\ub4dc\ubc14 \uc5f4\uae30");
   restoreBtn.textContent = "\u25B6";
   document.body.appendChild(restoreBtn);
+
+  // masthead 높이를 동적으로 계산하여 버튼 위치 설정
+  function positionRestoreBtn() {
+    var masthead = document.querySelector(".masthead");
+    if (masthead) {
+      var h = masthead.offsetHeight + masthead.offsetTop + 8;
+      restoreBtn.style.top = h + "px";
+    }
+  }
+  positionRestoreBtn();
+  window.addEventListener("resize", positionRestoreBtn);
 
   function collapseSidebar() {
     sidebar.classList.add("collapsed");
     btn.setAttribute("aria-expanded", "false");
     main.classList.add("sidebar-collapsed");
+    positionRestoreBtn();
     restoreBtn.classList.add("is-visible");
   }
 
