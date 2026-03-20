@@ -1,8 +1,8 @@
 ---
 ---
 
-/* 소라색 (연한 보라-파랑) 테마 */
-$primary-color: #C4BCF5;
+/* 코발트 블루 테마 */
+$primary-color: #82B4E0;
 
 /* 좌우 여백 축소 */
 $max-width: 1400px;
@@ -579,7 +579,7 @@ html.dark-mode {
   li {
     margin: 0;
     padding: 0.45em 0;
-    border-bottom: 1.5px solid rgba(196, 188, 245, 0.35);
+    border-bottom: 1.5px solid rgba(130, 180, 224, 0.35);
     transition: background 0.2s;
 
     &:last-child {
@@ -587,7 +587,7 @@ html.dark-mode {
     }
 
     &:hover {
-      background: rgba(196, 188, 245, 0.08);
+      background: rgba(130, 180, 224, 0.08);
     }
   }
 
@@ -618,8 +618,8 @@ html.dark-mode .sidebar-categories__list a {
 }
 
 html.dark-mode .sidebar-categories__list li {
-  border-bottom-color: rgba(196, 188, 245, 0.2);
-  &:hover { background: rgba(196, 188, 245, 0.06); }
+  border-bottom-color: rgba(130, 180, 224, 0.2);
+  &:hover { background: rgba(130, 180, 224, 0.06); }
 }
 
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */
@@ -638,14 +638,14 @@ html.dark-mode .sidebar-categories__list li {
 
 /* ── TOC 활성 링크 (뷰포트 중앙 기준, 하나만 강조) ── */
 .toc a.is-active-link {
-  background-color: rgba(196, 188, 245, 0.2) !important;
-  color: #7B6FC4 !important;
+  background-color: rgba(130, 180, 224, 0.2) !important;
+  color: #4A8AC4 !important;
   font-weight: 700 !important;
 }
 
 html.dark-mode .toc a.is-active-link {
-  background-color: rgba(196, 188, 245, 0.15) !important;
-  color: #C4BCF5 !important;
+  background-color: rgba(130, 180, 224, 0.15) !important;
+  color: #82B4E0 !important;
 }
 
 /* ── 커스텀 Footer ── */
