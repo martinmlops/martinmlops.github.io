@@ -102,8 +102,8 @@ graph TD
     B5 -->|Yes| S[✅ 프로덕션 성공]
 ```
 
-![Photo by Possessed Photography on Unsplash](https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&auto=format&fit=crop&q=80)
-*Photo by [Possessed Photography](https://unsplash.com/@possessedphotography) on [Unsplash](https://unsplash.com) — 파일럿에서 프로덕션으로의 전환이 진짜 경쟁입니다.*
+![Photo by Igor Omilaev on Unsplash](https://images.unsplash.com/photo-1717501218636-a390f9ac5957?w=1200&auto=format&fit=crop&q=80)
+*Photo by [Igor Omilaev](https://unsplash.com/@omilaev) on [Unsplash](https://unsplash.com) — 파일럿에서 프로덕션으로의 전환이 진짜 경쟁입니다.*
 
 ---
 
@@ -300,8 +300,8 @@ Kore.ai의 분석이 이를 가장 잘 요약합니다: "에이전트는 모델�
 
 40%의 실패 예측은 경고이자 기회입니다. 규율 있는 실행, 명확한 거버넌스, 입증 가능한 가치를 갖춘 조직이 나머지 60%에 속하게 될 것입니다.
 
-![Photo by Markus Spiske on Unsplash](https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1200&auto=format&fit=crop&q=80)
-*Photo by [Markus Spiske](https://unsplash.com/@markusspiske) on [Unsplash](https://unsplash.com) — 실험의 시대는 끝났습니다. 이제는 규율 있는 실행의 시대입니다.*
+![Photo by Growtika on Unsplash](https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?w=1200&auto=format&fit=crop&q=80)
+*Photo by [Growtika](https://unsplash.com/@growtika) on [Unsplash](https://unsplash.com) — 실험의 시대는 끝났습니다. 이제는 규율 있는 실행의 시대입니다.*
 
 ---
 
