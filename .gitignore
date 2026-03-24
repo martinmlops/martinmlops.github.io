@@ -20,3 +20,7 @@ Thumbs.db
 
 # Kiro specs (개발 문서, 배포 불필요)
 .kiro/
+
+# NDA 세션 내용 (비공개)
+_posts/2026-03-24-kiro-session-insights-aws-ai-ide.md
+assets/images/brian-beach-kiro-session.png
