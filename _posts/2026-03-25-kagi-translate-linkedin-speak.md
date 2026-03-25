@@ -1,6 +1,6 @@
 ---
 title: "Kagi Translate - 번역기인 줄 알았는데 밈 생성기였습니다"
-date: 2026-03-24
+date: 2026-03-25
 categories: [Tech Insights, AI Tools]
 tags: [Kagi Translate, AI Translation, LinkedIn Speak, Style Transfer, LLM, Privacy, DeepL, Google Translate]
 toc: true
