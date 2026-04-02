@@ -788,3 +788,14 @@ html.dark-mode {
   }
 }
 
+
+/* ── 인쇄 시 링크 URL 노출 방지 ── */
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+
+  abbr[title]:after {
+    content: none !important;
+  }
+}
