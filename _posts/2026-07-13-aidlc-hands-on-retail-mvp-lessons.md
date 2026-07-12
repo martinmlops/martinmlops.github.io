@@ -10,7 +10,7 @@ excerpt: "AI-DLC(AI-Driven Development Life Cycle)를 국내 리테일 기업 Po
 
 ## 개요
 
-이전 포스트 [AI-DLC 실전 적용기](/2026/04/01/aidlc-ai-driven-development-lifecycle/)에서 AWS가 제안하는 **AI-DLC(AI-Driven Development Life Cycle)** 방법론의 개념과 공개된 적용 사례를 분석했습니다. 이번 포스트는 그 후속편입니다. 방법론을 문서로 읽는 것과 실제 고객 프로젝트에 적용하는 것은 전혀 다른 이야기였습니다.
+이전 포스트 [AI-DLC 실전 적용기](/tech%20insights/ai%20engineering/2026/04/01/aidlc-ai-driven-development-lifecycle.html)에서 AWS가 제안하는 **AI-DLC(AI-Driven Development Life Cycle)** 방법론의 개념과 공개된 적용 사례를 분석했습니다. 이번 포스트는 그 후속편입니다. 방법론을 문서로 읽는 것과 실제 고객 프로젝트에 적용하는 것은 전혀 다른 이야기였습니다.
 
 국내 리테일 기업 A사의 **결품 대체상품 추천 서비스** PoC에 AI-DLC를 적용해, 요구사항 정의부터 배포까지 **총 3일** 만에 동작하는 MVP를 완성했습니다. 이 글에서는 프로젝트 진행 과정과 함께, 직접 써보니 보이는 AI-DLC의 강점과 한계, 그린필드(Greenfield)와 브라운필드(Brownfield)에서의 극명한 차이, 그리고 알고 시작하면 훨씬 빠른 6가지 실전 팁을 정리합니다.
 
@@ -46,7 +46,7 @@ graph LR
 | Construction | 어떻게 만드는가 | AI가 만들고 사람이 검증. Build는 빠르지만 Test는 명시적 지시 필요 |
 | Operations | 어떻게 운영·확장하는가 | 이번 PoC에서는 후속 과제로 분리 |
 
-개발 도구는 AI 코딩 에이전트 **Kiro**와 **Amazon Bedrock**(Titan Embed V2 임베딩 + Claude Haiku)을 사용했습니다. 방법론 자체에 대한 자세한 설명은 [이전 포스트](/2026/04/01/aidlc-ai-driven-development-lifecycle/)를 참고하세요.
+개발 도구는 AI 코딩 에이전트 **Kiro**와 **Amazon Bedrock**(Titan Embed V2 임베딩 + Claude Haiku)을 사용했습니다. 방법론 자체에 대한 자세한 설명은 [이전 포스트](/tech%20insights/ai%20engineering/2026/04/01/aidlc-ai-driven-development-lifecycle.html)를 참고하세요.
 
 ---
 
@@ -271,7 +271,7 @@ Terraform으로 인프라를 구성할 때 IAM 정책, 서비스 제한, API 파
 ## 참고 자료
 
 - [AWS 기술 블로그 - AI-DLC(AI-Driven Development Life Cycle) 소개](https://aws.amazon.com/ko/blogs/tech/ai-driven-development-life-cycle/)
-- [이전 포스트 - AI-DLC 실전 적용기: AI 중심 개발 생명주기와 적용 사례 분석](/2026/04/01/aidlc-ai-driven-development-lifecycle/)
+- [이전 포스트 - AI-DLC 실전 적용기: AI 중심 개발 생명주기와 적용 사례 분석](/tech%20insights/ai%20engineering/2026/04/01/aidlc-ai-driven-development-lifecycle.html)
 - [Kiro - AI 코딩 에이전트](https://kiro.dev/)
 - [Playwright MCP - Microsoft](https://github.com/microsoft/playwright-mcp)
 - [AWS MCP Servers (AWS Knowledge MCP 포함)](https://awslabs.github.io/mcp/)
