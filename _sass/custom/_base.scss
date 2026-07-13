@@ -1,0 +1,77 @@
+/* ── 전역 베이스: 세미나 타이포·표·인용구·코드 ────────── */
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* 본문 타이포 */
+.page__content {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgb(var(--fg));
+
+  a:not(.btn) {
+    color: rgb(var(--accent));
+  }
+
+  /* 헤딩: 타이트한 애플 톤 */
+  h1, h2, h3, h4 {
+    letter-spacing: -0.01em;
+    color: rgb(var(--fg));
+  }
+  h2 {
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid rgb(var(--line));
+  }
+
+  /* 인용구 → 세미나 콜아웃 톤 (기존 글의 > 💡 팁 자동 업그레이드) */
+  blockquote {
+    margin: 18px 0;
+    padding: 18px 22px;
+    background: rgb(var(--subtle));
+    border: 1px solid rgb(var(--line) / 0.6);
+    border-left: 3px solid rgb(var(--accent));
+    border-radius: 10px;
+    color: rgb(var(--fg) / 0.78);
+    font-style: normal;
+    font-size: 0.95em;
+
+    p:last-child { margin-bottom: 0; }
+    cite { color: rgb(var(--muted)); }
+  }
+
+  /* 표: 얇은 선 + subtle 헤더 */
+  table {
+    border: 1px solid rgb(var(--line));
+    font-size: 0.85em;
+
+    th {
+      background: rgb(var(--subtle));
+      border: 1px solid rgb(var(--line));
+      padding: 10px 14px;
+    }
+    td {
+      border: 1px solid rgb(var(--line));
+      padding: 10px 14px;
+    }
+  }
+
+  /* 인라인 코드 */
+  :not(pre) > code {
+    font-family: var(--font-mono);
+    background: rgb(var(--subtle));
+    border: 1px solid rgb(var(--line) / 0.6);
+    border-radius: 5px;
+    padding: 0.1em 0.4em;
+    font-size: 0.8em;
+  }
+
+  /* 코드블록 컨테이너 */
+  div.highlighter-rouge {
+    border-radius: 10px;
+  }
+}
+
+pre, code {
+  font-family: var(--font-mono);
+}
