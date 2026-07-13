@@ -566,7 +566,7 @@ html.dark-mode {
   li {
     margin: 0;
     padding: 0.45em 0;
-    border-bottom: 1.5px solid rgba(176, 190, 245, 0.35);
+    border-bottom: 1.5px solid rgb(var(--accent) / .21);
     transition: background 0.2s;
 
     &:last-child {
@@ -574,7 +574,7 @@ html.dark-mode {
     }
 
     &:hover {
-      background: rgba(176, 190, 245, 0.08);
+      background: rgb(var(--accent) / .05);
     }
   }
 
@@ -605,8 +605,8 @@ html.dark-mode .sidebar-categories__list a {
 }
 
 html.dark-mode .sidebar-categories__list li {
-  border-bottom-color: rgba(176, 190, 245, 0.2);
-  &:hover { background: rgba(176, 190, 245, 0.06); }
+  border-bottom-color: rgb(var(--accent) / .12);
+  &:hover { background: rgb(var(--accent) / .04); }
 }
 
 /* ── Permalink: JS에서 텍스트 제거, 이모지만 유지 ── */
@@ -625,17 +625,22 @@ html.dark-mode .sidebar-categories__list li {
 
 /* ── TOC 활성 링크 (뷰포트 중앙 기준, 하나만 강조) ── */
 .toc a.is-active-link {
-  background-color: rgba(176, 190, 245, 0.2) !important;
-  color: #6878C4 !important;
+  background-color: rgb(var(--accent) / .12) !important;
+  color: rgb(var(--accent)) !important;
   font-weight: 700 !important;
 }
 
 html.dark-mode .toc a.is-active-link {
-  background-color: rgba(176, 190, 245, 0.15) !important;
+  background-color: rgb(var(--accent) / .09) !important;
   color: rgb(var(--accent)) !important;
 }
 
 /* ── 커스텀 Footer ── */
+.page__footer {
+  background-color: rgb(var(--subtle));
+  color: rgb(var(--muted)) !important;
+}
+
 .page__footer-inner {
   display: flex;
   flex-wrap: wrap;

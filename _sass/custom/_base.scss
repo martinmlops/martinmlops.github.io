@@ -67,7 +67,9 @@ body {
   }
 
   /* 코드블록 컨테이너 */
-  div.highlighter-rouge {
+  div.highlighter-rouge,
+  figure.highlight {
+    background: rgb(var(--subtle));
     border-radius: 10px;
   }
 }
