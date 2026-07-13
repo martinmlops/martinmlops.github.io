@@ -66,10 +66,10 @@ body {
     font-size: 0.8em;
   }
 
-  /* 코드블록 컨테이너 */
+  /* 코드블록 컨테이너 — 배경은 rouge 구문강조 팔레트(어두운 배경용 밝은 텍스트)에
+     맞춰 테마 기본값 유지. --subtle로 바꾸면 라이트 모드에서 밝은 글자가 안 보임 */
   div.highlighter-rouge,
   figure.highlight {
-    background: rgb(var(--subtle));
     border-radius: 10px;
   }
 }
