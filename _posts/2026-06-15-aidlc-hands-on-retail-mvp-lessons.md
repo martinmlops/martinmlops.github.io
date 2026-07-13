@@ -1,7 +1,7 @@
 ---
 title: "AI-DLC 실전 후기 - 3일 만에 만든 결품 대체상품 추천 MVP, 그리고 한계와 팁"
 date: 2026-06-15 09:00:00 +0900
-categories: [Tech Insights, AI Engineering]
+categories: [AWS, AI Engineering]
 tags: [AI-DLC, Kiro, AWS, Amazon Bedrock, MCP, Playwright, PoC, MVP, Greenfield, Serverless]
 toc: true
 toc_sticky: true
