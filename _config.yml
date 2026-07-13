@@ -2,7 +2,7 @@
 # 사이트 기본 정보
 # ──────────────────────────────────────────────
 title: "Tech Blog"
-subtitle: "Azure, Kubernetes, Cloud Infrastructure<br>DevOps, Full stack Engineering"
+subtitle: "Azure, AWS, Kubernetes, Cloud Infrastructure<br>DevOps, Full stack Engineering"
 description: "Azure, AWS, Kubernetes, Network, Security 등 클라우드 인프라 기술 블로그"
 url: "https://martinmlops.github.io"
 baseurl: ""
