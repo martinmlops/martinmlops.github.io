@@ -139,6 +139,7 @@ include:
 exclude:
   - "*.gem"
   - "*.gemspec"
+  - docs
   - node_modules
   - __tests__
   - package*.json
