@@ -1,0 +1,134 @@
+/* ── 재사용 컴포넌트 (세미나 HTML 이식) ─────────────────
+   사용법: 마크다운 안에서 <div class="..." markdown="1"> */
+
+/* 콜아웃 */
+.page__content .callout {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 22px;
+  margin: 18px 0;
+  background: rgb(var(--subtle));
+  border: 1px solid rgb(var(--line) / 0.6);
+  border-radius: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+
+  p { margin: 0 0 0.5em; }
+  p:last-child { margin-bottom: 0; }
+}
+
+/* 카드 + 그리드 */
+.page__content .card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 18px 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page__content .card {
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+  padding: 24px;
+  background: rgb(var(--bg));
+
+  /* 첫 문단의 strong = 카드 제목 */
+  p:first-child strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: rgb(var(--fg));
+  }
+  p {
+    margin: 0 0 0.5em;
+    font-size: 14px;
+    color: rgb(var(--fg) / 0.7);
+  }
+  p:last-child { margin-bottom: 0; }
+
+  /* 반전(강조) 카드 */
+  &.dk {
+    background: rgb(var(--fg));
+    border-color: transparent;
+
+    p { color: rgb(var(--bg) / 0.65); }
+    p:first-child strong { color: rgb(var(--bg)); }
+  }
+}
+
+/* 칩 */
+.page__content .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.page__content .chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 11px;
+  border: 1px solid rgb(var(--line));
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(var(--muted));
+}
+
+/* 비교 (그린필드 vs 브라운필드 레이아웃) */
+.page__content .compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 18px 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page__content .compare-good,
+.page__content .compare-bad {
+  border-radius: 12px;
+  padding: 22px;
+  font-size: 14px;
+
+  p:first-child strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+
+    li { margin-bottom: 6px; }
+  }
+}
+
+.page__content .compare-good {
+  border: 1px solid rgb(var(--accent) / 0.45);
+
+  li::before {
+    content: "✓ ";
+    color: rgb(var(--accent));
+    font-weight: 600;
+  }
+}
+
+.page__content .compare-bad {
+  border: 1px solid rgb(var(--line));
+  color: rgb(var(--fg) / 0.75);
+
+  li::before {
+    content: "✕ ";
+    color: rgb(var(--muted));
+    font-weight: 600;
+  }
+}
