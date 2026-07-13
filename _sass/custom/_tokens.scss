@@ -1,0 +1,23 @@
+/* ── 디자인 토큰 (세미나 HTML에서 추출) ─────────────────
+   RGB 삼중값 형태 유지 → rgb(var(--accent) / .5) 알파 조합 가능 */
+:root {
+  --bg: 255 255 255;
+  --fg: 29 29 31;
+  --muted: 122 122 122;
+  --subtle: 245 245 247;
+  --line: 224 224 224;
+  --accent: 0 102 204;
+  --font-sans: "Pretendard Variable", Pretendard, "SF Pro Text", "SF Pro Display",
+    -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Apple SD Gothic Neo",
+    system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+html.dark-mode {
+  --bg: 0 0 0;
+  --fg: 245 245 247;
+  --muted: 134 134 139;
+  --subtle: 28 28 30;
+  --line: 52 52 54;
+  --accent: 41 151 255;
+}
