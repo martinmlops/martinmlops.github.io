@@ -30,5 +30,7 @@ _posts/2026-04-01-aidlc-ai-driven-development-lifecycle-team-share.md
 # 내부 세미나 원본 (고객 정보 포함, 비공개)
 내부세미나_*.html
 
+.bundle/
+
 # SDD 진행 레저 (로컬 스크래치)
 .superpowers/
