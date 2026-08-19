@@ -42,6 +42,12 @@ describe('테마 토큰', () => {
                    'assets/js/mermaid-init.js', '_includes/head/custom.html'];
     files.forEach((f) => expect(readFileContent(f)).not.toMatch(/dark-mode/));
   });
+
+  test('body가 토큰에서 배경·글자색을 가져온다 (MM 흰 배경 위 다크 텍스트 방지)', () => {
+    const base = readFileContent('_sass/custom/_base.scss');
+    expect(base).toMatch(/body\s*\{[^}]*background-color:\s*rgb\(var\(--bg\)\)/s);
+    expect(base).toMatch(/body\s*\{[^}]*color:\s*rgb\(var\(--fg\)\)/s);
+  });
 });
 
 describe('색상 규칙 (신규 파일)', () => {

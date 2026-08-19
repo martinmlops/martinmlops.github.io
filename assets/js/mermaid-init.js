@@ -1,23 +1,6 @@
-document.addEventListener("DOMContentLoaded", function () {
-  if (typeof mermaid === "undefined") return;
-
-  // language-mermaid 코드 블록을 mermaid div로 변환
-  document.querySelectorAll("code.language-mermaid").forEach(function (code) {
-    var pre = code.parentElement;
-    var div = document.createElement("div");
-    div.className = "mermaid";
-    div.textContent = code.textContent;
-    div.setAttribute("data-mermaid-src", code.textContent);
-    pre.parentElement.replaceChild(div, pre);
-  });
-
-  // 다크모드 감지
-  var isDark = window.blogTheme ? window.blogTheme.isDark() : false;
-
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: "base",
-    themeVariables: isDark
+(function () {
+  function themeVariables(isDark) {
+    return isDark
       ? {
           // 다크모드 (악센트 블루 #2997ff 계열)
           primaryColor: "#0d2a45",
@@ -51,6 +34,48 @@ document.addEventListener("DOMContentLoaded", function () {
           titleColor: "#1d1d1f",
           edgeLabelBackground: "#ffffff",
           nodeTextColor: "#1d1d1f",
-        },
+        };
+  }
+
+  function currentIsDark() {
+    return window.blogTheme ? window.blogTheme.isDark() : false;
+  }
+
+  function rerender(isDark) {
+    mermaid.initialize({ startOnLoad: false, theme: "base", themeVariables: themeVariables(isDark) });
+    document.querySelectorAll(".mermaid").forEach(function (el) {
+      var src = el.getAttribute("data-mermaid-src");
+      if (src) {
+        el.removeAttribute("data-processed");
+        el.innerHTML = src;
+      }
+    });
+    mermaid.run();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof mermaid === "undefined") return;
+
+    // language-mermaid 코드 블록을 mermaid div로 변환
+    document.querySelectorAll("code.language-mermaid").forEach(function (code) {
+      var pre = code.parentElement;
+      var div = document.createElement("div");
+      div.className = "mermaid";
+      div.textContent = code.textContent;
+      div.setAttribute("data-mermaid-src", code.textContent);
+      pre.parentElement.replaceChild(div, pre);
+    });
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: themeVariables(currentIsDark()),
+    });
   });
-});
+
+  // 테마 토글 시 이미 렌더링된 다이어그램을 새 팔레트로 재렌더링
+  document.addEventListener("themechange", function (e) {
+    if (typeof mermaid === "undefined") return;
+    rerender(e.detail.isDark);
+  });
+})();

@@ -1,6 +1,8 @@
 /* ── 전역 베이스: 세미나 타이포·표·인용구·코드 ────────── */
 
 body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
   font-family: var(--font-sans);
 }
 
