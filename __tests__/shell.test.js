@@ -98,3 +98,17 @@ describe('페이지 이관', () => {
     expect(content).toMatch(/site\.tags/);
   });
 });
+
+describe('홈', () => {
+  test('index.html이 home 레이아웃을 쓴다', () => {
+    expect(readFileContent('index.html')).toMatch(/^layout: home$/m);
+  });
+
+  test('home 레이아웃이 paginator를 쓴다', () => {
+    expect(readFileContent('_layouts/home.html')).toMatch(/paginator\.posts/);
+  });
+
+  test('home 레이아웃에 author_profile 잔재가 없다', () => {
+    expect(readFileContent('_layouts/home.html')).not.toMatch(/author.profile/);
+  });
+});
