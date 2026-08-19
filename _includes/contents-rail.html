@@ -1,4 +1,12 @@
 <aside class="rail" id="contents-rail">
+  <a class="rail-author" href="{{ '/' | relative_url }}">
+    <img class="rail-avatar" src="{{ site.author.avatar | relative_url }}" alt="{{ site.author.name }}" width="92" height="92">
+    <span class="rail-author-name">{{ site.author.name }}</span>
+    {%- if site.author.bio -%}
+    <span class="rail-author-bio">{{ site.author.bio }}</span>
+    {%- endif -%}
+  </a>
+
   <div class="rail-label">Contents</div>
 
   <nav class="rail-toc" id="rail-toc" aria-label="목차" hidden></nav>

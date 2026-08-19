@@ -32,6 +32,28 @@ describe('셸 레이아웃', () => {
   });
 });
 
+describe('레일 저자 블록', () => {
+  test('레일이 site.author.avatar와 site.author.name을 참조한다 (사진이 다시 사라지는 회귀 방지)', () => {
+    const html = readFileContent('_includes/contents-rail.html');
+    expect(html).toMatch(/site\.author\.avatar/);
+    expect(html).toMatch(/site\.author\.name/);
+  });
+
+  test('아바타 경로에 relative_url을 적용한다', () => {
+    const html = readFileContent('_includes/contents-rail.html');
+    expect(html).toMatch(/site\.author\.avatar\s*\|\s*relative_url/);
+  });
+
+  test('저자 블록이 Contents 레이블보다 앞에 온다', () => {
+    const html = readFileContent('_includes/contents-rail.html');
+    const authorIdx = html.indexOf('site.author.avatar');
+    const contentsIdx = html.indexOf('rail-label');
+    expect(authorIdx).toBeGreaterThan(-1);
+    expect(contentsIdx).toBeGreaterThan(-1);
+    expect(authorIdx).toBeLessThan(contentsIdx);
+  });
+});
+
 describe('테마 토큰', () => {
   const tokens = () => readFileContent('_sass/custom/_tokens.scss');
 
