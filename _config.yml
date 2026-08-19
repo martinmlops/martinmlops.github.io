@@ -18,19 +18,27 @@ minimal_mistakes_skin: "air"   # 밝고 깔끔한 스킨 [air, aqua, contrast, d
 # ──────────────────────────────────────────────
 # 기능 설정
 # ──────────────────────────────────────────────
-search: true
-search_full_content: true
+# search / search_full_content 설정은 없다 — 이 값들은 테마 내장 lunr
+# 검색(마스트헤드 토글 + .search-content 오버레이)에만 쓰였는데, 이
+# 셸에는 그 마크업 자체가 없다(masthead.html은 어디서도 include되지
+# 않음). 검색은 자체 구현(_plugins/search_index.rb가 만드는
+# /search-index.json + assets/js/search-match.js·search.js, 아래
+# after_footer_scripts로 로드)이며, 이 값들과 무관하게 동작한다. 테마가
+# 무조건 복사해오는 assets/js/lunr/* 5개 파일은 search_index.rb가
+# generate 단계에서 걸러낸다.
 
 # 수식 (MathJax)
 head_scripts:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
-# Mermaid 다이어그램
+# Mermaid 다이어그램 · 자체 검색 엔진
 after_footer_scripts:
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
   - /assets/js/theme-toggle.js
   - /assets/js/mermaid-init.js
   - /assets/js/contents-rail.js
+  - /assets/js/search-match.js
+  - /assets/js/search.js
 
 # ──────────────────────────────────────────────
 # 저자 정보

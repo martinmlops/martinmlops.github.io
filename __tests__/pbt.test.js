@@ -255,8 +255,14 @@ test('Property 10: 검색 인덱스 완전성', () => {
       expect(post.data.title).toBeDefined();
       expect(typeof post.data.title).toBe('string');
       expect(post.content.length).toBeGreaterThan(0);
+      // 검색은 이제 테마 내장 lunr(옛 `search: true` 플래그)가 아니라
+      // 자체 엔진(_plugins/search_index.rb + assets/js/search-match.js·
+      // search.js)이 담당한다 — 그 엔진이 after_footer_scripts로 실제
+      // 로드되고 있는지를 확인한다.
       const config = readYaml('_config.yml');
-      expect(config.search).toBe(true);
+      expect(config.after_footer_scripts).toEqual(
+        expect.arrayContaining(['/assets/js/search-match.js', '/assets/js/search.js'])
+      );
     }),
     { numRuns: 100 }
   );
