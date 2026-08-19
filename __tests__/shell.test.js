@@ -145,3 +145,20 @@ describe('홈', () => {
     expect(readFileContent('_layouts/home.html')).not.toMatch(/author.profile/);
   });
 });
+
+describe('와이드 레이아웃 (Job 1: 전체 너비 사용)', () => {
+  test('.layout의 기본 max-width가 넓어졌다 (1160px 좁은 캡 제거)', () => {
+    const shell = readFileContent('_sass/custom/_shell.scss');
+    const startIdx = shell.indexOf('.layout {');
+    expect(startIdx).toBeGreaterThan(-1);
+    const block = shell.slice(startIdx, shell.indexOf('}', startIdx) + 1);
+    expect(block).toMatch(/max-width:\s*min\(/);
+    expect(block).not.toMatch(/max-width:\s*1160px/);
+  });
+
+  test('.post-body에 좁은 46rem 측정 캡이 남아있지 않다', () => {
+    const post = readFileContent('_sass/custom/_post.scss');
+    expect(post).not.toMatch(/max-width:\s*46rem/);
+  });
+});
+
