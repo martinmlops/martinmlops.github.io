@@ -23,6 +23,40 @@
 
 .post-tags { margin-top: 56px; }
 
+/* ── 본문 폭: 문장형 요소만 읽기 좋은 폭으로, 나머지는 컬럼 전체 폭 ──
+   .post-body 자체는 캡을 두지 않는다(넓은 모니터 요구사항 유지) — 캡은
+   문단/목록/인용/제목처럼 "읽는" 요소에만 걸고, 표·코드블록·이미지·mermaid
+   같은 "보는" 블록은 컬럼 폭을 그대로 쓴다. margin은 건드리지 않으므로
+   양쪽 다 컬럼 왼쪽 끝에서 시작해 좌측 정렬이 자연히 맞는다. */
+.post-body > p,
+.post-body > ul,
+.post-body > ol,
+.post-body > dl,
+.post-body > blockquote,
+.post-body > h1,
+.post-body > h2,
+.post-body > h3,
+.post-body > h4,
+.post-body > h5,
+.post-body > h6 {
+  max-width: 42rem;
+}
+
+/* kramdown은 단독 이미지 한 줄을 <p><img></p>로 감싼다 — 이건 사진이지
+   글이 아니므로 컬럼 전체 폭을 쓴다 */
+.post-body > p:has(img) {
+  max-width: none;
+}
+
+/* 표는 컬럼 전체 폭을 쓰되, 컬럼보다 넓어지면 페이지가 아니라 표 자체가
+   가로로 스크롤된다 (모바일 등 좁은 화면에서 특히 중요) */
+.post-body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .page-head {
   padding: 64px 0 32px;
   border-bottom: 1px solid rgb(var(--line) / .4);

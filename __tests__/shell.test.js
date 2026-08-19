@@ -341,3 +341,44 @@ describe('레일 접힘 localStorage 라운드트립 (jsdom 없이 vm으로 실�
     expect(head).toMatch(/setAttribute\(["']data-theme["'],\s*t\)/);
   });
 });
+
+describe('본문 폭: 문장형 요소만 읽기 좋은 폭, 나머지는 컬럼 전체 폭 (프로즈 측정)', () => {
+  const post = () => readFileContent('_sass/custom/_post.scss');
+
+  test('.post-body 컨테이너 자체에는 여전히 캡이 없다 (캡은 컬럼이 아니라 안쪽 요소에 건다)', () => {
+    expect(post()).not.toMatch(/\.post-body\s*\{[^}]*max-width/s);
+  });
+
+  test('문단·목록·인용·제목이 읽기 좋은 폭(약 42rem)으로 제한된다', () => {
+    const src = post();
+    const block = src.match(/\.post-body > p,[\s\S]*?\{[\s\S]*?\}/);
+    expect(block).not.toBeNull();
+    expect(block[0]).toMatch(/\.post-body > p/);
+    expect(block[0]).toMatch(/\.post-body > ul/);
+    expect(block[0]).toMatch(/\.post-body > ol/);
+    expect(block[0]).toMatch(/\.post-body > blockquote/);
+    expect(block[0]).toMatch(/\.post-body > h1/);
+    expect(block[0]).toMatch(/\.post-body > h6/);
+    expect(block[0]).toMatch(/max-width:\s*42rem/);
+  });
+
+  test('단독 이미지로만 이루어진 문단(kramdown의 <p><img></p>)은 폭 제한에서 빠진다', () => {
+    expect(post()).toMatch(/\.post-body > p:has\(img\)\s*\{[^}]*max-width:\s*none/s);
+  });
+
+  test('표는 컬럼 전체 폭을 쓰고, 컬럼보다 넓어지면 표 자체가 가로 스크롤된다', () => {
+    const block = post().match(/\.post-body table\s*\{[^}]*\}/s);
+    expect(block).not.toBeNull();
+    expect(block[0]).toMatch(/overflow-x:\s*auto/);
+  });
+
+  test('page.html·post.html이 같은 .post-body 클래스를 공유해 같은 규칙을 받는다', () => {
+    expect(readFileContent('_layouts/page.html')).toMatch(/class="post-body"/);
+    expect(readFileContent('_layouts/post.html')).toMatch(/class="post-body"/);
+  });
+
+  test('home의 .post-list는 프로즈 폭 제한에 걸리지 않는다 (.post-body 스코프 밖)', () => {
+    expect(readFileContent('_layouts/home.html')).not.toMatch(/post-body/);
+  });
+});
+
