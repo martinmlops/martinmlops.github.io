@@ -46,6 +46,7 @@
   margin-bottom: 22px; padding-bottom: 20px;
   border-bottom: 1px solid rgb(var(--line) / .5);
 }
+.rail-avatar-link { display: inline-flex; }
 .rail-avatar {
   width: 92px; height: 92px; border-radius: 50%;
   border: 1px solid rgb(var(--line));
@@ -53,9 +54,11 @@
 }
 .rail-author-name {
   font-size: 13px; font-weight: 600; color: rgb(var(--fg));
+  text-decoration: none;
 }
 .rail-author-bio {
   font-size: 11.5px; color: rgb(var(--muted));
+  text-decoration: none;
 }
 .rail-label {
   font-family: var(--font-mono); font-size: 9px; font-weight: 700;

@@ -15,9 +15,6 @@ layout: default
 
     <div class="post-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y.%m.%d' }}</time>
-      {%- if page.last_modified_at -%}
-      <span class="sep">·</span>개정 {{ page.last_modified_at | date: '%Y.%m.%d' }}
-      {%- endif -%}
       {%- if page.read_time != false -%}
       <span class="sep">·</span>{{ content | number_of_words: 'auto' | divided_by: 500 | plus: 1 }}분
       {%- endif -%}

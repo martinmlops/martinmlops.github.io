@@ -1,11 +1,13 @@
 <aside class="rail" id="contents-rail">
-  <a class="rail-author" href="{{ '/' | relative_url }}">
-    <img class="rail-avatar" src="{{ site.author.avatar | relative_url }}" alt="{{ site.author.name }}" width="92" height="92">
+  <div class="rail-author">
+    <a class="rail-avatar-link" href="{{ '/' | relative_url }}" aria-label="{{ site.author.name }}">
+      <img class="rail-avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="92" height="92">
+    </a>
     <span class="rail-author-name">{{ site.author.name }}</span>
     {%- if site.author.bio -%}
     <span class="rail-author-bio">{{ site.author.bio }}</span>
     {%- endif -%}
-  </a>
+  </div>
 
   <div class="rail-label">Contents</div>
 
