@@ -162,3 +162,53 @@ describe('와이드 레이아웃 (Job 1: 전체 너비 사용)', () => {
   });
 });
 
+describe('레일 접기 (Job 2: 토글 + 컨텐츠 확장)', () => {
+  test('.layout이 접힘 상태에서 grid-template-columns가 단일 1fr 컬럼으로 바뀐다', () => {
+    const shell = readFileContent('_sass/custom/_shell.scss');
+    expect(shell).toMatch(/html\.rail-collapsed\s+\.layout\s*\{[^}]*grid-template-columns:\s*0?rem?\s*1fr/s);
+  });
+
+  test('접힘 규칙이 기본 .layout 규칙 이후(또는 더 높은 특이성)로 존재해 이긴다', () => {
+    const shell = readFileContent('_sass/custom/_shell.scss');
+    const baseIdx = shell.indexOf('.layout {');
+    const collapsedIdx = shell.indexOf('html.rail-collapsed .layout');
+    expect(baseIdx).toBeGreaterThan(-1);
+    expect(collapsedIdx).toBeGreaterThan(-1);
+    expect(collapsedIdx).toBeGreaterThan(baseIdx);
+  });
+
+  test('site-header.html이 레일 토글 버튼(.rail-open)을 렌더링한다', () => {
+    const html = readFileContent('_includes/site-header.html');
+    expect(html).toMatch(/class="icon-btn rail-open"/);
+    expect(html).toMatch(/aria-expanded=/);
+    expect(html).toMatch(/aria-label=/);
+  });
+
+  test('.icon-btn.rail-open이 데스크톱 기본값에서도 보인다 (더 이상 항상 display:none이 아니다)', () => {
+    const shell = readFileContent('_sass/custom/_shell.scss');
+    // 1024px 미디어쿼리 밖(데스크톱 기본)에서 display:none으로 숨기는 규칙이 없어야 한다
+    const beforeMobile = shell.split('@media (max-width: 1024px)')[0];
+    expect(beforeMobile).not.toMatch(/\.icon-btn\.rail-open\s*\{[^}]*display:\s*none/s);
+  });
+
+  test('접힘 상태를 localStorage에서 읽어 첫 페인트 전에 적용한다 (FOUC 방지, 테마 스크립트와 동일한 패턴)', () => {
+    const head = readFileContent('_includes/head/custom.html');
+    expect(head).toMatch(/localStorage\.getItem\(["']rail-collapsed["']\)/);
+    expect(head).toMatch(/classList\.add\(["']rail-collapsed["']\)/);
+    // 기존 테마 스크립트 로직은 그대로 남아 있어야 한다
+    expect(head).toMatch(/localStorage\.getItem\(["']theme["']\)/);
+  });
+
+  test('레일 토글 스크립트가 localStorage에 상태를 저장하고 데스크톱/모바일을 구분한다', () => {
+    const js = readFileContent('assets/js/contents-rail.js');
+    expect(js).toMatch(/localStorage\.setItem\(["']rail-collapsed["']/);
+    expect(js).toMatch(/rail-collapsed/);
+  });
+
+  test('레일이 display:none이 아닌 방식으로 접혀 TOC DOM 노드가 파괴되지 않는다', () => {
+    const shell = readFileContent('_sass/custom/_shell.scss');
+    const collapsedRailRule = shell.match(/html\.rail-collapsed\s+\.rail\s*\{[^}]*\}/s);
+    expect(collapsedRailRule).not.toBeNull();
+    expect(collapsedRailRule[0]).not.toMatch(/display:\s*none/);
+  });
+});

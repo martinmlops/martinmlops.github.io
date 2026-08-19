@@ -31,10 +31,16 @@
   max-width: min(1800px, 100% - 5rem); margin: 0 auto; padding: 0 28px 120px;
   display: grid; grid-template-columns: 13rem 1fr; gap: 0 56px;
   align-items: start;
+  transition: grid-template-columns .22s ease, gap .22s ease;
 }
 .content { min-width: 0; }
 
-.rail { position: sticky; top: 68px; align-self: start; padding-top: 40px; }
+.rail {
+  position: sticky; top: 68px; align-self: start; padding-top: 40px;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity .16s ease;
+}
 .rail-author {
   display: flex; flex-direction: column; align-items: flex-start; gap: 7px;
   margin-bottom: 22px; padding-bottom: 20px;
@@ -82,18 +88,26 @@
 }
 .rail-footer span { font-size: 11px; color: rgb(var(--muted)); }
 
-.icon-btn.rail-open { display: none; }
+/* rail-open 버튼은 모든 너비에서 보인다: 데스크톱에서는 레일 접기/펼치기,
+   1024px 이하에서는 오프캔버스 드로어 열기/닫기로 역할이 바뀐다 (JS가 판단) */
+
+/* 데스크톱: 레일 접기 — .rail은 DOM에 그대로 남겨(TOC 노드·스크롤 트래킹 보존)
+   grid 트랙만 0으로 줄이면 .content가 남은 1fr을 자연히 차지한다 */
+@media (min-width: 1025px) {
+  html.rail-collapsed .layout { grid-template-columns: 0rem 1fr; gap: 0 0; }
+  html.rail-collapsed .rail { opacity: 0; pointer-events: none; }
+}
 
 /* 모바일: 레일을 드로어로 */
 @media (max-width: 1024px) {
   .layout { grid-template-columns: 1fr; }
-  .icon-btn.rail-open { display: flex; }
   .rail {
     position: fixed; inset: 52px auto 0 0; z-index: 90;
     width: 16rem; padding: 24px 20px;
     background: rgb(var(--bg));
     border-right: 1px solid rgb(var(--line));
     overflow-y: auto;
+    opacity: 1;
     transform: translateX(-100%);
     transition: transform .2s ease;
   }

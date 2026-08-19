@@ -64,14 +64,81 @@
     items.forEach(function (it) { observer.observe(it.heading); });
   }
 
-  function wireDrawer(rail) {
+  // rail-open 버튼은 두 역할을 겸한다:
+  //  - 1024px 초과(데스크톱): 레일 전체를 접고/펼치고, .content가 grid로 자연히 넓어진다
+  //  - 1024px 이하(모바일): 오프캔버스 드로어를 열고/닫는다 (기존 동작 그대로)
+  // 접힘 상태는 localStorage에 저장하고, 첫 페인트 전에는 head/custom.html의
+  // 인라인 스크립트가 같은 값을 읽어 <html>에 미리 클래스를 찍어 깜빡임을 막는다.
+  var DESKTOP_QUERY = "(min-width: 1025px)";
+
+  function wireRailToggle(rail) {
     var toggles = document.querySelectorAll(".rail-open");
+    var mql = window.matchMedia(DESKTOP_QUERY);
+
+    function isDesktop() {
+      return mql.matches;
+    }
+
+    function isCollapsed() {
+      return document.documentElement.classList.contains("rail-collapsed");
+    }
+
+    function updateButtons() {
+      var desktop = isDesktop();
+      var expanded = desktop ? !isCollapsed() : rail.classList.contains("open");
+      var label = desktop
+        ? (expanded ? "레일 접기" : "레일 펼치기")
+        : (expanded ? "목차 닫기" : "목차 열기");
+      Array.prototype.forEach.call(toggles, function (btn) {
+        btn.setAttribute("aria-expanded", expanded ? "true" : "false");
+        btn.setAttribute("aria-label", label);
+      });
+    }
+
+    function setCollapsed(collapsed) {
+      document.documentElement.classList.toggle("rail-collapsed", collapsed);
+      // 접힌 동안에는 폭이 0이라도 키보드/스크린리더가 레일에 들어가지 않도록 한다.
+      // TOC/카테고리 DOM 노드 자체는 그대로 두어 펼쳤을 때 다시 동작하게 한다.
+      rail.toggleAttribute("inert", collapsed);
+      try {
+        localStorage.setItem("rail-collapsed", collapsed ? "true" : "false");
+      } catch (e) {}
+      updateButtons();
+    }
+
+    function handleBreakpointChange() {
+      if (isDesktop()) {
+        // 모바일 드로어의 open 상태는 데스크톱 그리드와 무관하므로 정리한다.
+        rail.classList.remove("open");
+        rail.toggleAttribute("inert", isCollapsed());
+      } else {
+        // 데스크톱에서 접힌 채로 좁아지면, 드로어가 다시 열릴 수 있어야 한다.
+        rail.removeAttribute("inert");
+      }
+      updateButtons();
+    }
+
     Array.prototype.forEach.call(toggles, function (btn) {
       btn.addEventListener("click", function () {
-        var open = rail.classList.toggle("open");
-        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        if (isDesktop()) {
+          setCollapsed(!isCollapsed());
+        } else {
+          rail.classList.toggle("open");
+          updateButtons();
+        }
       });
     });
+
+    if (mql.addEventListener) {
+      mql.addEventListener("change", handleBreakpointChange);
+    } else if (mql.addListener) {
+      mql.addListener(handleBreakpointChange);
+    }
+
+    // 첫 페인트 전 스크립트가 <html>에 이미 rail-collapsed를 찍어 두었을 수 있으므로
+    // DOM 준비 시점에 inert·aria 상태를 실제 클래스와 맞춘다.
+    if (isDesktop()) rail.toggleAttribute("inert", isCollapsed());
+    updateButtons();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -81,7 +148,7 @@
     var navEl = document.getElementById("rail-nav");
     if (!main || !rail || !tocEl || !navEl) return;
 
-    wireDrawer(rail);
+    wireRailToggle(rail);
 
     // 헤딩 스캔 범위는 문서 본문(.post-body)으로 한정한다.
     // #main 전체를 스캔하면 홈 목록의 포스트 제목(h2)까지 TOC로 잡혀
