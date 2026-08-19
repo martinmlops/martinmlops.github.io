@@ -26,6 +26,10 @@
 .icon-btn:hover { color: rgb(var(--fg)); border-color: rgb(var(--fg) / .3); }
 .icon-btn[aria-expanded="true"] { color: rgb(var(--fg)); border-color: rgb(var(--fg) / .35); }
 
+/* 레일 토글 아이콘: 사각형(패널) + 왼쪽 분할선. 채워진 왼쪽 칸 = 패널이
+   보이는 상태(aria-expanded="true"), 빈 칸 = 접힌/닫힌 상태를 그대로 보여준다. */
+.icon-btn.rail-open[aria-expanded="false"] .rail-icon-fill { opacity: 0; }
+
 /* ── 검색: 헤더 버튼 아래에 뜨는 드롭다운 카드 ── */
 .search-wrap { position: relative; display: flex; }
 

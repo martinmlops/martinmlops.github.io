@@ -92,6 +92,8 @@
       Array.prototype.forEach.call(toggles, function (btn) {
         btn.setAttribute("aria-expanded", expanded ? "true" : "false");
         btn.setAttribute("aria-label", label);
+        // title도 같은 문구로 갱신해 마우스 오버 시 상태에 맞는 설명이 뜨게 한다.
+        btn.setAttribute("title", label);
       });
     }
 

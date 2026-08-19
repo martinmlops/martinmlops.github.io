@@ -311,6 +311,23 @@ describe('레일 접힘 localStorage 라운드트립 (jsdom 없이 vm으로 실�
     expect(page.htmlEl._classes.has('rail-collapsed')).toBe(false);
   });
 
+  test('버튼의 title이 aria-label과 함께 상태에 따라 갱신된다 (데스크톱: 접기/펼치기)', () => {
+    const page = runRailScript({ desktop: true });
+    expect(page.btnEl._attrs.title).toBe(page.btnEl._attrs['aria-label']);
+    const before = page.btnEl._attrs.title;
+    page.click();
+    expect(page.btnEl._attrs.title).not.toBe(before);
+    expect(page.btnEl._attrs.title).toBe(page.btnEl._attrs['aria-label']);
+  });
+
+  test('모바일 폭에서는 title/aria-label이 드로어 열기·닫기 문구로 갱신된다', () => {
+    const page = runRailScript({ desktop: false });
+    expect(page.btnEl._attrs['aria-label']).toMatch(/목차/);
+    expect(page.btnEl._attrs.title).toBe(page.btnEl._attrs['aria-label']);
+    page.click();
+    expect(page.btnEl._attrs.title).toBe(page.btnEl._attrs['aria-label']);
+  });
+
   test('쓰기 키와 head/custom.html의 프리페인트 읽기 키가 정확히 같다 (rail-collapsed)', () => {
     const js = readFileContent('assets/js/contents-rail.js');
     const head = readFileContent('_includes/head/custom.html');
@@ -382,7 +399,6 @@ describe('본문 폭: 문장형 요소만 읽기 좋은 폭, 나머지는 컬럼
   });
 });
 
-
 describe('이미지 캡션 문단 (kramdown이 <p><img><em>캡션</em></p>로 묶는 경우)', () => {
   const post = () => readFileContent('_sass/custom/_post.scss');
 
@@ -406,3 +422,28 @@ describe('이미지 캡션 문단 (kramdown이 <p><img><em>캡션</em></p>로 �
     expect(block).toMatch(/margin-top:/);
   });
 });
+
+describe('레일 토글 버튼 아이콘/접근성 (Defect 2: 햄버거 → 사이드 패널 아이콘)', () => {
+  const header = () => readFileContent('_includes/site-header.html');
+
+  test('버튼에 title 속성이 있다', () => {
+    expect(header()).toMatch(/class="icon-btn rail-open"[^>]*title="[^"]+"/);
+  });
+
+  test('버튼 아이콘이 사이드 패널(좌측 분할 사각형) 모양이다 (더 이상 3줄 햄버거가 아니다)', () => {
+    const html = header();
+    const btnIdx = html.indexOf('rail-open');
+    const svgBlock = html.slice(btnIdx, html.indexOf('</svg>', btnIdx));
+    // 예전 햄버거 3줄 패턴(M2 4h12M2 8h12M2 12h8)이 사라지고
+    // 사각형 + 분할선(rect/line 형태)으로 바뀐다
+    expect(svgBlock).not.toMatch(/M2 4h12M2 8h12M2 12h8/);
+    expect(svgBlock).toMatch(/<rect/);
+  });
+
+  test('aria-label이 한국어이며 aria-expanded와 함께 쓰인다', () => {
+    const html = header();
+    expect(html).toMatch(/class="icon-btn rail-open"[\s\S]*?aria-label="[가-힣]/);
+    expect(html).toMatch(/class="icon-btn rail-open"[\s\S]*?aria-expanded="(true|false)"/);
+  });
+});
+
