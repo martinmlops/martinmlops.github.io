@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // 다크모드 감지
-  var isDark = document.documentElement.classList.contains("dark-mode");
+  var isDark = window.blogTheme ? window.blogTheme.isDark() : false;
 
   mermaid.initialize({
     startOnLoad: true,

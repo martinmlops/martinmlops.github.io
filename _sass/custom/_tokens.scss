@@ -1,5 +1,10 @@
-/* ── 디자인 토큰 (세미나 HTML에서 추출) ─────────────────
-   RGB 삼중값 형태 유지 → rgb(var(--accent) / .5) 알파 조합 가능 */
+/* ── 디자인 토큰 ────────────────────────────────────────
+   이 파일이 색을 정의하는 유일한 곳이다.
+   다른 SCSS는 rgb(var(--…)) 형태로만 색을 참조한다.
+   농담이 필요하면 새 색을 만들지 말고 알파로 합성한다:
+     rgb(var(--accent) / .08)
+   예외는 rouge(코드 하이라이트) 팔레트뿐이다. */
+
 :root {
   --bg: 255 255 255;
   --fg: 29 29 31;
@@ -7,17 +12,37 @@
   --subtle: 245 245 247;
   --line: 224 224 224;
   --accent: 0 102 204;
-  --font-sans: "Pretendard Variable", Pretendard, "SF Pro Text", "SF Pro Display",
-    -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Apple SD Gothic Neo",
-    system-ui, sans-serif;
+
+  --ok: 52 199 89;
+  --warn: 255 149 0;
+  --danger: 255 59 48;
+
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-html.dark-mode {
+@mixin dark-tokens {
   --bg: 0 0 0;
   --fg: 245 245 247;
   --muted: 134 134 139;
   --subtle: 28 28 30;
   --line: 52 52 54;
   --accent: 41 151 255;
+
+  --ok: 48 209 88;
+  --warn: 255 159 10;
+  --danger: 255 69 58;
 }
+
+/* 미선택(기본) = OS 설정을 따른다. 단 명시적 라이트는 이기지 못한다. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { @include dark-tokens; }
+}
+
+/* 명시적 다크는 항상 이긴다. */
+:root[data-theme="dark"] { @include dark-tokens; }
+
+/* 명시적 라이트는 :root 기본값을 그대로 쓴다 (선택자 존재 자체가 테스트 대상). */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }

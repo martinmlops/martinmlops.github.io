@@ -28,11 +28,9 @@ head_scripts:
 # Mermaid 다이어그램
 after_footer_scripts:
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
-  - /assets/js/sidebar-toggle.js
   - /assets/js/theme-toggle.js
-  - /assets/js/permalink-fix.js
-  - /assets/js/toc-active-fix.js
+  - /assets/js/mermaid-init.js
+  - /assets/js/contents-rail.js
 
 # ──────────────────────────────────────────────
 # 저자 정보
@@ -94,7 +92,7 @@ defaults:
       path: ""
       type: posts
     values:
-      layout: single
+      layout: post
       author_profile: true
       read_time: true
       comments: true
