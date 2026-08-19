@@ -212,3 +212,132 @@ describe('레일 접기 (Job 2: 토글 + 컨텐츠 확장)', () => {
     expect(collapsedRailRule[0]).not.toMatch(/display:\s*none/);
   });
 });
+
+describe('레일 접힘 localStorage 라운드트립 (jsdom 없이 vm으로 실제 스크립트를 실행)', () => {
+  const vm = require('vm');
+
+  function makeFakeElement(tag) {
+    const classes = new Set();
+    const attrs = {};
+    const listeners = {};
+    return {
+      tagName: tag || 'DIV',
+      _classes: classes,
+      _attrs: attrs,
+      _listeners: listeners,
+      classList: {
+        add: (c) => classes.add(c),
+        remove: (c) => classes.delete(c),
+        contains: (c) => classes.has(c),
+        toggle: (c, force) => {
+          if (force === undefined) {
+            if (classes.has(c)) { classes.delete(c); return false; }
+            classes.add(c); return true;
+          }
+          if (force) classes.add(c); else classes.delete(c);
+          return force;
+        },
+      },
+      setAttribute: (k, v) => { attrs[k] = String(v); },
+      getAttribute: (k) => (k in attrs ? attrs[k] : null),
+      removeAttribute: (k) => { delete attrs[k]; },
+      toggleAttribute: (k, force) => { if (force) attrs[k] = ''; else delete attrs[k]; return !!force; },
+      hasAttribute: (k) => k in attrs,
+      addEventListener: function (evt, fn) { (listeners[evt] = listeners[evt] || []).push(fn); },
+      querySelectorAll: () => [],
+      querySelector: () => null,
+    };
+  }
+
+  // contents-rail.js를 실제 DOM 대신 최소 스텁 위에서 그대로 실행하고,
+  // 헤더의 .rail-open 버튼 클릭을 흉내내 localStorage 라운드트립을 검증한다.
+  function runRailScript({ desktop } = { desktop: true }) {
+    const src = readFileContent('assets/js/contents-rail.js');
+    const store = {};
+    const localStorageStub = {
+      getItem: (k) => (k in store ? store[k] : null),
+      setItem: (k, v) => { store[k] = String(v); },
+      removeItem: (k) => { delete store[k]; },
+    };
+
+    const htmlEl = makeFakeElement('HTML');
+    const mainEl = makeFakeElement('MAIN');
+    const railEl = makeFakeElement('ASIDE');
+    const tocEl = makeFakeElement('NAV');
+    const navEl = makeFakeElement('NAV');
+    const btnEl = makeFakeElement('BUTTON');
+    const byId = { main: mainEl, 'contents-rail': railEl, 'rail-toc': tocEl, 'rail-nav': navEl };
+
+    let domReady = null;
+    const mql = { matches: desktop, addEventListener: () => {}, addListener: () => {} };
+
+    const sandbox = {
+      document: {
+        documentElement: htmlEl,
+        addEventListener: (evt, fn) => { if (evt === 'DOMContentLoaded') domReady = fn; },
+        getElementById: (id) => byId[id] || null,
+        querySelectorAll: (sel) => (sel === '.rail-open' ? [btnEl] : []),
+        querySelector: () => null,
+        createElement: () => makeFakeElement('DIV'),
+        createTextNode: (t) => ({ text: t }),
+      },
+      window: { matchMedia: () => mql, innerWidth: desktop ? 1400 : 800 },
+      localStorage: localStorageStub,
+      console,
+      Set,
+      Array,
+    };
+    vm.createContext(sandbox);
+    vm.runInContext(src, sandbox, { filename: 'contents-rail.js' });
+    domReady();
+
+    return {
+      click: () => btnEl._listeners.click.forEach((fn) => fn()),
+      store,
+      htmlEl,
+      railEl,
+      btnEl,
+    };
+  }
+
+  test('데스크톱에서 토글 버튼 클릭이 localStorage["rail-collapsed"]에 기록된다', () => {
+    const page = runRailScript({ desktop: true });
+    expect(page.store['rail-collapsed']).toBeUndefined();
+    page.click();
+    expect(page.store['rail-collapsed']).toBe('true');
+    expect(page.htmlEl._classes.has('rail-collapsed')).toBe(true);
+    page.click();
+    expect(page.store['rail-collapsed']).toBe('false');
+    expect(page.htmlEl._classes.has('rail-collapsed')).toBe(false);
+  });
+
+  test('쓰기 키와 head/custom.html의 프리페인트 읽기 키가 정확히 같다 (rail-collapsed)', () => {
+    const js = readFileContent('assets/js/contents-rail.js');
+    const head = readFileContent('_includes/head/custom.html');
+    const writeKeyMatch = js.match(/localStorage\.setItem\(\s*["']([^"']+)["']/);
+    const readKeyMatch = head.match(/localStorage\.getItem\(\s*["']([^"']+)["']\)\s*===\s*"true"/);
+    expect(writeKeyMatch).not.toBeNull();
+    expect(readKeyMatch).not.toBeNull();
+    expect(writeKeyMatch[1]).toBe(readKeyMatch[1]);
+    expect(writeKeyMatch[1]).toBe('rail-collapsed');
+  });
+
+  test('모바일 폭에서는 클릭이 드로어만 열고 rail-collapsed 키를 쓰지 않는다', () => {
+    const page = runRailScript({ desktop: false });
+    page.click();
+    expect(page.store['rail-collapsed']).toBeUndefined();
+    expect(page.railEl._classes.has('open')).toBe(true);
+  });
+
+  test('head/custom.html의 프리페인트 스크립트는 DOMContentLoaded가 아니라 즉시 실행되는 동기 스크립트다', () => {
+    const head = readFileContent('_includes/head/custom.html');
+    expect(head).not.toMatch(/DOMContentLoaded/);
+    expect(head).toMatch(/\(function\s*\(\)\s*\{[\s\S]*rail-collapsed[\s\S]*\}\)\(\);/);
+  });
+
+  test('프리페인트 스크립트 추가 후에도 기존 테마 로직(localStorage theme)이 그대로 남아 있다', () => {
+    const head = readFileContent('_includes/head/custom.html');
+    expect(head).toMatch(/localStorage\.getItem\(["']theme["']\)/);
+    expect(head).toMatch(/setAttribute\(["']data-theme["'],\s*t\)/);
+  });
+});

@@ -96,13 +96,16 @@
     }
 
     function setCollapsed(collapsed) {
+      // localStorage 기록을 가장 먼저 한다: 이후의 DOM 조작(classList, inert,
+      // aria 갱신)에서 예외가 나더라도 사용자의 선택은 이미 저장되어 있어야
+      // 다음 방문 시 head/custom.html의 프리페인트 스크립트가 같은 값을 읽는다.
+      try {
+        localStorage.setItem("rail-collapsed", collapsed ? "true" : "false");
+      } catch (e) {}
       document.documentElement.classList.toggle("rail-collapsed", collapsed);
       // 접힌 동안에는 폭이 0이라도 키보드/스크린리더가 레일에 들어가지 않도록 한다.
       // TOC/카테고리 DOM 노드 자체는 그대로 두어 펼쳤을 때 다시 동작하게 한다.
       rail.toggleAttribute("inert", collapsed);
-      try {
-        localStorage.setItem("rail-collapsed", collapsed ? "true" : "false");
-      } catch (e) {}
       updateButtons();
     }
 
