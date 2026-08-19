@@ -7,11 +7,11 @@
       .replace(/\s+/g, "-");
   }
 
-  function buildToc(main, tocEl, navEl) {
-    var h2s = main.querySelectorAll("h2");
+  function buildToc(scope, tocEl, navEl) {
+    var h2s = scope.querySelectorAll("h2");
     if (h2s.length < MIN_H2) return null;
 
-    var heads = main.querySelectorAll("h2, h3");
+    var heads = scope.querySelectorAll("h2, h3");
     var list = document.createElement("ul");
     var counter = 0;
     var items = [];
@@ -82,7 +82,12 @@
     if (!main || !rail || !tocEl || !navEl) return;
 
     wireDrawer(rail);
-    var items = buildToc(main, tocEl, navEl);
+
+    // 헤딩 스캔 범위는 문서 본문(.post-body)으로 한정한다.
+    // #main 전체를 스캔하면 홈 목록의 포스트 제목(h2)까지 TOC로 잡혀
+    // 카테고리 내비 대신 가짜 목차가 뜬다 (post/page만 .post-body를 가짐).
+    var body = document.querySelector(".post-body");
+    var items = body ? buildToc(body, tocEl, navEl) : null;
     if (items) trackScroll(items);
   });
 })();

@@ -19,6 +19,17 @@ describe('셸 레이아웃', () => {
     );
     expect(postsDefault.values.layout).toBe('post');
   });
+
+  test('레일 스크립트가 헤딩 스캔 범위를 .post-body로 제한한다 (홈 목록의 h2가 TOC로 잘못 잡히지 않도록)', () => {
+    const js = readFileContent('assets/js/contents-rail.js');
+    expect(js).toMatch(/querySelector\(["']\.post-body["']\)/);
+    expect(js).not.toMatch(/main\.querySelectorAll\(\s*["']h2/);
+  });
+
+  test('[hidden] 속성이 전역에서 display:none으로 복원된다 (MM의 HTML5 shiv가 nav 등에 display:block을 걸어 덮어쓰는 문제 대응)', () => {
+    const base = readFileContent('_sass/custom/_base.scss');
+    expect(base).toMatch(/\[hidden\]\s*\{[^}]*display:\s*none/);
+  });
 });
 
 describe('테마 토큰', () => {
