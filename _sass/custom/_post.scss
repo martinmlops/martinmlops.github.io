@@ -43,9 +43,30 @@
 }
 
 /* kramdown은 단독 이미지 한 줄을 <p><img></p>로 감싼다 — 이건 사진이지
-   글이 아니므로 컬럼 전체 폭을 쓴다 */
+   글이 아니므로 컬럼 전체 폭을 쓴다.
+   또한 이미지 다음 줄에 빈 줄 없이 *캡션*을 적으면 kramdown이 이미지와
+   <em>캡션을 같은 <p> 안에 묶는다. 기본 흐름대로 두면 인라인 요소인 em이
+   이미지 옆 남는 폭에 끼어 들어가(고 넘치면 잘려) 보이므로, 이 문단은
+   세로로 쌓아 이미지 먼저·캡션은 그 아래·왼쪽 정렬로 강제한다. */
 .post-body > p:has(img) {
   max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.post-body > p:has(img) img {
+  display: block;
+}
+
+/* 캡션: 본문보다 작고, muted 톤, 이미지와 분리되도록 위쪽 여백을 둔다.
+   내부 링크(예: 출처 표기)는 별도 처리 없이 전역 a 규칙(accent 색)을 그대로 받는다. */
+.post-body > p:has(img) em {
+  display: block;
+  margin-top: 10px;
+  color: rgb(var(--muted));
+  font-size: 0.85em;
+  line-height: 1.5;
 }
 
 /* 표는 컬럼 전체 폭을 쓰되, 컬럼보다 넓어지면 페이지가 아니라 표 자체가

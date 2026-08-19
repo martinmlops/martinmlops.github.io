@@ -382,3 +382,27 @@ describe('본문 폭: 문장형 요소만 읽기 좋은 폭, 나머지는 컬럼
   });
 });
 
+
+describe('이미지 캡션 문단 (kramdown이 <p><img><em>캡션</em></p>로 묶는 경우)', () => {
+  const post = () => readFileContent('_sass/custom/_post.scss');
+
+  test('이미지를 포함한 문단은 세로로 쌓인다 (이미지 먼저, 캡션은 아래)', () => {
+    const src = post();
+    const idx = src.indexOf('.post-body > p:has(img)');
+    expect(idx).toBeGreaterThan(-1);
+    const block = src.slice(idx, src.indexOf('}', src.indexOf('{', idx)) + 1);
+    expect(block).toMatch(/display:\s*flex/);
+    expect(block).toMatch(/flex-direction:\s*column/);
+    expect(block).toMatch(/align-items:\s*flex-start/);
+  });
+
+  test('캡션(em)은 본문보다 작고 muted 색상이며 위쪽에 여백을 갖는다', () => {
+    const src = post();
+    const idx = src.indexOf('.post-body > p:has(img) em');
+    expect(idx).toBeGreaterThan(-1);
+    const block = src.slice(idx, src.indexOf('}', src.indexOf('{', idx)) + 1);
+    expect(block).toMatch(/color:\s*rgb\(var\(--muted\)\)/);
+    expect(block).toMatch(/font-size:\s*0\.\d+em/);
+    expect(block).toMatch(/margin-top:/);
+  });
+});
