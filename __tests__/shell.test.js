@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { readYaml, readFileContent } = require('./utils');
+const { readYaml, readFileContent, parseFrontMatter } = require('./utils');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -89,5 +89,12 @@ describe('페이지 이관', () => {
     const html = readFileContent('_includes/footer.html');
     expect(html).toMatch(/site\.data\.categories/);
     expect(html).not.toMatch(/categories\/azure\//);
+  });
+
+  test('tags.md는 프론트매터 외에 실제 본문을 가진다 (layout: tags 제거로 사라진 목록을 대체)', () => {
+    const src = readFileContent('_pages/tags.md');
+    const { content } = parseFrontMatter(src);
+    expect(content.trim().length).toBeGreaterThan(0);
+    expect(content).toMatch(/site\.tags/);
   });
 });
