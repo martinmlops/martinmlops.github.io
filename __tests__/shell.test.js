@@ -61,8 +61,12 @@ describe('테마 토큰', () => {
     expect(tokens()).toMatch(/:root\s*\{[^}]*--accent:\s*0 102 204/s);
   });
 
-  test('OS 다크 선호를 지원한다', () => {
-    expect(tokens()).toMatch(/@media \(prefers-color-scheme: dark\)/);
+  test('OS 다크 선호를 자동으로 따르지 않는다 (기본은 항상 라이트)', () => {
+    expect(tokens()).not.toMatch(/@media \(prefers-color-scheme: dark\)/);
+  });
+
+  test('저장된 선택이 없으면 기본이 라이트다 (:root 기본값 자체가 라이트 토큰)', () => {
+    expect(tokens()).toMatch(/:root\s*\{[^}]*--bg:\s*255 255 255/s);
   });
 
   test('명시적 data-theme 오버라이드를 지원한다', () => {
@@ -70,10 +74,34 @@ describe('테마 토큰', () => {
     expect(tokens()).toMatch(/\[data-theme="light"\]/);
   });
 
+  test('명시적 dark 오버라이드가 다크 토큰(mixin)을 적용한다', () => {
+    const src = tokens();
+    const idx = src.indexOf(':root[data-theme="dark"]');
+    expect(idx).toBeGreaterThan(-1);
+    const block = src.slice(idx, src.indexOf('}', src.indexOf('{', idx)) + 1);
+    expect(block).toMatch(/@include dark-tokens/);
+    // dark-tokens 믹스인 자체가 검은 배경을 정의한다 (실제 적용 값 검증)
+    const mixinIdx = src.indexOf('@mixin dark-tokens');
+    const mixinBlock = src.slice(mixinIdx, src.indexOf('}', mixinIdx) + 1);
+    expect(mixinBlock).toMatch(/--bg:\s*0 0 0/);
+  });
+
+  test('color-scheme이 각 상태에 맞게 지정된다', () => {
+    const src = tokens();
+    expect(src).toMatch(/:root\s*\{[^}]*color-scheme:\s*light/s);
+    expect(src).toMatch(/\[data-theme="dark"\]\s*\{[^}]*color-scheme:\s*dark/s);
+  });
+
   test('html.dark-mode 클래스 방식은 남아 있지 않다', () => {
     const files = ['_sass/custom/_tokens.scss', 'assets/js/theme-toggle.js',
                    'assets/js/mermaid-init.js', '_includes/head/custom.html'];
     files.forEach((f) => expect(readFileContent(f)).not.toMatch(/dark-mode/));
+  });
+
+  test('theme-toggle.js의 isDark()가 OS 선호로 폴백하지 않는다 (저장된 선택 없음=라이트)', () => {
+    const js = readFileContent('assets/js/theme-toggle.js');
+    expect(js).not.toMatch(/prefers-color-scheme/);
+    expect(js).not.toMatch(/systemPrefersDark/);
   });
 
   test('body가 토큰에서 배경·글자색을 가져온다 (MM 흰 배경 위 다크 텍스트 방지)', () => {

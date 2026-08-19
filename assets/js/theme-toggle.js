@@ -1,16 +1,13 @@
 (function () {
   var root = document.documentElement;
 
-  function systemPrefersDark() {
-    return window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
-
+  // 저장된 선택이 없으면(=data-theme 속성이 없으면) 항상 라이트로 취급한다.
+  // OS 선호로 폴백하지 않는다 — 방문자가 테마 버튼으로 명시적으로 고르기
+  // 전까지는 배경이 항상 흰색이어야 하고, 토글 버튼도 그 상태를 기준으로
+  // 다음 클릭이 무엇을 할지 판단해야 한다(그렇지 않으면 OS가 다크인 환경에서
+  // 화면은 라이트인데 버튼은 "다크에서 라이트로" 라고 착각해 반대로 토글된다).
   function isDark() {
-    var t = root.getAttribute("data-theme");
-    if (t === "dark") return true;
-    if (t === "light") return false;
-    return systemPrefersDark();
+    return root.getAttribute("data-theme") === "dark";
   }
 
   function apply(dark) {
