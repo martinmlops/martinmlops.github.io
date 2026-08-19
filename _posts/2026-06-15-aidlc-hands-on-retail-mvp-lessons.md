@@ -56,27 +56,8 @@ excerpt: "3일짜리 PoC 지원으로 끝날 뻔한 일이 5개월째 이어지�
 두 서비스는 같은 AWS 계정·리전(us-east-1)에 있지만 **Terraform 스택이 분리**되어 있습니다.
 서로의 리소스를 공유하지 않고 따로 배포·롤백됩니다.
 
-```mermaid
-graph TB
-    subgraph REC["스택 1 — 유사상품 추천"]
-        CF1["CloudFront"] --> API1["REST API<br>5 경로"]
-        CF1 --> WS["WebSocket API<br>스트리밍"]
-        API1 --> L1["Lambda ×5<br>recommend · validate · history<br>image-search · websocket"]
-        WS --> L1
-        L1 --> DDB1["DynamoDB ×4"]
-        L1 --> S3A["S3 — vectors/ · reasons/"]
-        COG["Cognito"] -.->|"admin / user"| CF1
-        S3A -->|"S3 이벤트"| EMB["Lambda — embedding"]
-        EMB -.-> BR["Bedrock<br>Titan Embed v2 · Claude 3 Haiku"]
-    end
-
-    subgraph SUR["스택 2 — 추천결과 피드백"]
-        CF2["CloudFront ×2<br>점장용 · 본사직원용"] --> API2["REST API<br>1 경로"]
-        API2 --> L2["Lambda ×1<br>survey-api"]
-        L2 --> DDB2["DynamoDB ×1"]
-        L2 --> S3B["S3"]
-    end
-```
+![유사상품 추천 서비스 전체 아키텍처 — 한 계정(us-east-1) 안의 두 Terraform 스택](/assets/images/similar-product-recommendation/architecture-overview.jpg)
+*배포 기준 전체 아키텍처. 왼쪽 파란 영역이 추천 스택, 오른쪽 보라 영역이 피드백 스택입니다. S3 버킷명은 비식별 처리했습니다.*
 
 두 영역 사이에 **연결선이 없다는 점**이 핵심입니다. 서로를 호출하지 않고 각자 배포됩니다.
 
@@ -160,22 +141,15 @@ LLM을 쓰는 서비스에서 응답 속도가 안 나올 때, 대부분의 답�
 
 상품 데이터를 올리는 순간부터 추천에 쓸 벡터가 만들어지기까지의 과정입니다.
 
-```mermaid
-graph LR
-    X["상품마스터<br>엑셀"] -->|"① 스키마·결측·중복 검증"| J["JSON"]
-    J -->|"② S3 data/ 업로드"| EV["S3 이벤트"]
-    EV --> LMB["embedding Lambda"]
-    LMB -->|"③ 텍스트 직렬화"| T["'{품명} {세분류}<br>{재질} {색상} {등급}'"]
-    T -->|"④ Titan Embed v2"| V["1,024차원 벡터<br>L2 정규화"]
-    V -->|"⑤ 적재"| S3["S3 vectors/<br>embeddings.bin 117MB<br>+ manifest.json"]
-```
+![임베딩 사전 처리 파이프라인 — 엑셀 업로드부터 벡터·추천 사유 적재까지](/assets/images/similar-product-recommendation/embedding-pipeline.jpg)
+*사전 처리 파이프라인 전체. ①~④가 임베딩 배치, ⑤~⑧이 사유 배치이며 순서대로 실행됩니다. 둘 다 사전 처리라 추천 요청 시점에는 실행되지 않습니다.*
 
-### ① 엑셀 검증·변환
+### 1. 엑셀 검증·변환
 
 상품 마스터 엑셀을 스키마·결측·중복 기준으로 검증한 뒤 JSON으로 변환합니다.
 검증에 실패한 건은 버리지 않고 **리포트로 분리**합니다 — 고객이 원본 데이터의 문제를 알아야 고칩니다.
 
-### ② S3 업로드가 파이프라인을 깨운다
+### 2. S3 업로드가 파이프라인을 깨운다
 
 `data/` 프리픽스에 업로드되면 S3 이벤트가 embedding Lambda를 호출합니다.
 
@@ -186,7 +160,7 @@ graph LR
 > 타임아웃으로 실패하는 Lambda를 그대로 두면, 재시도가 겹치면서 Bedrock 호출 비용만 나갑니다.
 > **"안 되는 경로는 막아 두는 것"** 도 설계입니다.
 
-### ③ 상품 정보의 텍스트 직렬화
+### 3. 상품 정보의 텍스트 직렬화
 
 임베딩 입력은 상품 속성을 이어붙인 한 줄 텍스트입니다.
 
@@ -197,13 +171,13 @@ graph LR
 원래는 부피(CBM)도 들어 있었는데, 상품마스터 v4.0에서 CBM 항목이 폐지되면서 입력에서 빠졌습니다.
 **임베딩 입력 스키마는 원본 데이터 스키마에 묶여 있습니다** — 고객사 데이터 정책이 바뀌면 같이 바뀝니다.
 
-### ④ Titan Embed v2 → 1,024차원
+### 4. Titan Embed v2 → 1,024차원
 
 상품 하나가 숫자 1,024개의 좌표가 됩니다. 여기서 한 가지 — **L2 정규화까지 걸어 둡니다.**
 정규화된 벡터끼리는 내적이 곧 코사인 유사도라서, 이후 추천 계산에서 나눗셈을 할 필요가 없습니다.
 3만 건 × 3만 건 규모에서 이 차이는 작지 않습니다.
 
-### ⑤ S3 적재
+### 5. S3 적재
 
 벡터를 `embeddings.bin`(Float32, **117MB**)과 `embedding_manifest.json`으로 나눠 저장합니다.
 **30,006건 전량**이며, 추천 Lambda가 **콜드스타트에 1회 로드해 재사용**합니다.
