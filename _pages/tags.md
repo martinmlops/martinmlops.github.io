@@ -1,6 +1,6 @@
 ---
 title: "태그"
-layout: tags
+layout: page
 permalink: /tags/
 author_profile: true
 ---

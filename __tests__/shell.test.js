@@ -58,3 +58,36 @@ describe('색상 규칙 (신규 파일)', () => {
     expect(hex).toEqual([]);
   });
 });
+
+describe('페이지 이관', () => {
+  const pageFiles = () => {
+    const glob = (dir) => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true })
+      .flatMap((e) => e.isDirectory() ? glob(path.join(dir, e.name))
+                                      : [path.join(dir, e.name)])
+      .filter((f) => f.endsWith('.md'));
+    return glob('_pages');
+  };
+
+  test('_pages는 20개다', () => {
+    expect(pageFiles()).toHaveLength(20);
+  });
+
+  test('어떤 _pages 파일도 single/tags 레이아웃을 쓰지 않는다', () => {
+    pageFiles().forEach((f) => {
+      const src = readFileContent(f);
+      expect(src).not.toMatch(/^layout:\s*(single|tags)\s*$/m);
+    });
+  });
+
+  test('_pages 기본 레이아웃이 page이다', () => {
+    const cfg = readYaml('_config.yml');
+    const d = cfg.defaults.find((x) => x.scope.path === '_pages');
+    expect(d.values.layout).toBe('page');
+  });
+
+  test('푸터가 카테고리를 하드코딩하지 않는다', () => {
+    const html = readFileContent('_includes/footer.html');
+    expect(html).toMatch(/site\.data\.categories/);
+    expect(html).not.toMatch(/categories\/azure\//);
+  });
+});

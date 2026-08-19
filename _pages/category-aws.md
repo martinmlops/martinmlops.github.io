@@ -1,6 +1,6 @@
 ---
 title: "AWS"
-layout: single
+layout: page
 permalink: /categories/aws/
 author_profile: true
 ---

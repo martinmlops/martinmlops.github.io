@@ -1,6 +1,6 @@
 ---
 title: "LLM"
-layout: single
+layout: page
 permalink: /categories/ai/llm/
 author_profile: true
 ---

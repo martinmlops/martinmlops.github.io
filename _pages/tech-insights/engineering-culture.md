@@ -1,6 +1,6 @@
 ---
 title: "Engineering Culture"
-layout: single
+layout: page
 permalink: /categories/tech-insights/engineering-culture/
 author_profile: true
 ---

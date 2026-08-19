@@ -1,6 +1,6 @@
 ---
 title: "Terraform"
-layout: single
+layout: page
 permalink: /categories/terraform/
 author_profile: true
 ---

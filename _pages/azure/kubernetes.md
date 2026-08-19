@@ -1,6 +1,6 @@
 ---
 title: "Kubernetes"
-layout: single
+layout: page
 permalink: /categories/azure/kubernetes/
 author_profile: true
 ---

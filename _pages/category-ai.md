@@ -1,6 +1,6 @@
 ---
 title: "AI"
-layout: single
+layout: page
 permalink: /categories/ai/
 author_profile: true
 ---

@@ -1,6 +1,6 @@
 ---
 title: "Azure"
-layout: single
+layout: page
 permalink: /categories/azure/
 author_profile: true
 ---

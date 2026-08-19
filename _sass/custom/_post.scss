@@ -23,3 +23,15 @@
 
 .post-body { max-width: 46rem; }
 .post-tags { margin-top: 56px; }
+
+.page-head {
+  padding: 64px 0 32px;
+  border-bottom: 1px solid rgb(var(--line) / .4);
+  margin-bottom: 36px;
+}
+.page-title {
+  font-size: clamp(26px, 3.2vw, 38px); font-weight: 800;
+  line-height: 1.15; letter-spacing: -.025em;
+  color: rgb(var(--fg)); margin: 0;
+}
+.page-sub { margin-top: 10px; color: rgb(var(--muted)); font-size: 15px; }

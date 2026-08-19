@@ -1,6 +1,6 @@
 ---
 title: "Tech Insights"
-layout: single
+layout: page
 permalink: /categories/tech-insights/
 author_profile: true
 ---

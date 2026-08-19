@@ -1,6 +1,6 @@
 ---
 title: "Azure 네트워크"
-layout: single
+layout: page
 permalink: /categories/azure/azure-네트워크/
 author_profile: true
 ---
