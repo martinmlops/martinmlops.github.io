@@ -1,6 +1,6 @@
 ---
 title: "RAG"
-layout: single
+layout: page
 permalink: /categories/ai/rag/
 author_profile: true
 ---

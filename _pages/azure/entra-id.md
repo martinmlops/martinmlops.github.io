@@ -1,6 +1,6 @@
 ---
 title: "Microsoft Entra ID & Domain Service"
-layout: single
+layout: page
 permalink: /categories/azure/microsoft-entra-id/
 author_profile: true
 ---

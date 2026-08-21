@@ -1,4 +1,7 @@
+const fs = require('fs');
+const path = require('path');
 const {
+  ROOT,
   readYaml,
   readFileContent,
   listPostFiles,
@@ -11,10 +14,13 @@ const {
 // ─── Jekyll 설정 확인 ───
 
 describe('Jekyll Configuration', () => {
-  test('Gemfile contains Jekyll and remote theme plugin', () => {
+  test('Gemfile은 jekyll을 쓰되 원격 테마 플러그인은 쓰지 않는다', () => {
     const gemfile = readFileContent('Gemfile');
     expect(gemfile).toMatch(/gem\s+["']jekyll["']/);
-    expect(gemfile).toMatch(/jekyll-remote-theme/);
+    // 테마를 직접 갖게 되면서 jekyll-remote-theme 의존을 끊었다
+    expect(gemfile).not.toMatch(/jekyll-remote-theme/);
+    // 검색 인덱스 생성에 쓰는 nokogiri는 남아 있어야 한다
+    expect(gemfile).toMatch(/gem\s+["']nokogiri["']/);
   });
 
   test('Gemfile contains sitemap and seo-tag plugins', () => {
@@ -23,21 +29,102 @@ describe('Jekyll Configuration', () => {
     expect(gemfile).toMatch(/jekyll-seo-tag/);
   });
 
+  test('Gemfile의 group :jekyll_plugins 구조가 그대로 남아 있다', () => {
+    const gemfile = readFileContent('Gemfile');
+    const group = gemfile.match(/group :jekyll_plugins do([\s\S]*?)\nend/);
+    expect(group).not.toBeNull();
+    ['jekyll-sitemap', 'jekyll-seo-tag', 'jekyll-feed',
+     'jekyll-paginate', 'jekyll-include-cache'].forEach((g) => {
+      expect(group[1]).toContain(g);
+    });
+  });
+
   test('_config.yml has required fields', () => {
     const config = readYaml('_config.yml');
     expect(config.title).toBeDefined();
     expect(config.url).toBeDefined();
-    expect(config.remote_theme).toMatch(/minimal-mistakes/);
     expect(config.locale).toBe('ko-KR');
   });
 
-  test('_config.yml has toc enabled in defaults', () => {
+  test('_config.yml에 minimal-mistakes 설정이 남아 있지 않다', () => {
+    const config = readYaml('_config.yml');
+    expect(config.remote_theme).toBeUndefined();
+    expect(config.minimal_mistakes_skin).toBeUndefined();
+    expect(config.theme).toBeUndefined();
+    expect(config.plugins).not.toContain('jekyll-remote-theme');
+    // 테마 liquid 아카이브 제너레이터 전용 키
+    expect(config.category_archive).toBeUndefined();
+    expect(config.tag_archive).toBeUndefined();
+  });
+
+  test('목차는 defaults의 toc 플래그가 아니라 클라이언트 스크립트가 만든다', () => {
     const config = readYaml('_config.yml');
     const postDefaults = config.defaults.find(
       d => d.scope && d.scope.type === 'posts'
     );
     expect(postDefaults).toBeDefined();
-    expect(postDefaults.values.toc).toBe(true);
+    // 테마 레이아웃만 읽던 플래그들은 사라졌다
+    ['toc', 'toc_sticky', 'author_profile', 'share', 'related'].forEach((k) => {
+      expect(postDefaults.values[k]).toBeUndefined();
+    });
+    // 실제로 목차를 만드는 경로가 살아 있는지 확인한다
+    expect(config.after_footer_scripts).toContain('/assets/js/contents-rail.js');
+    expect(readFileContent('_includes/contents-rail.html')).toMatch(/id="rail-toc"/);
+    expect(readFileContent('assets/js/contents-rail.js')).toMatch(/rail-toc/);
+    // post.html이 읽는 플래그는 남아 있어야 한다
+    expect(postDefaults.values.read_time).toBe(true);
+    expect(postDefaults.values.layout).toBe('post');
+  });
+});
+
+// ─── minimal-mistakes 제거 확인 ───
+
+describe('minimal-mistakes 제거', () => {
+  test('assets/css/main.scss가 테마 스킨/본체를 import하지 않는다', () => {
+    const scss = readFileContent('assets/css/main.scss');
+    expect(scss).not.toMatch(/@import\s+["']minimal-mistakes/);
+    expect(scss).not.toMatch(/minimal_mistakes_skin/);
+    // 자체 디자인 시스템은 그대로 로드된다
+    ['tokens', 'base', 'components', 'shell', 'post'].forEach((p) => {
+      expect(scss).toMatch(new RegExp(`@import\\s+["']custom/${p}["']`));
+    });
+  });
+
+  test('테마 DOM을 겨냥하던 _sass/custom/_layout.scss가 사라졌다', () => {
+    expect(fs.existsSync(path.join(ROOT, '_sass/custom/_layout.scss'))).toBe(false);
+    expect(readFileContent('assets/css/main.scss')).not.toMatch(/custom\/layout/);
+  });
+
+  test('_includes에는 셸이 실제로 include하는 파일만 남아 있다', () => {
+    const present = fs.readdirSync(path.join(ROOT, '_includes'))
+      .filter((f) => f.endsWith('.html')).sort();
+    expect(present).toEqual([
+      'contents-rail.html', 'footer.html', 'search-overlay.html', 'site-header.html',
+    ]);
+    ['masthead.html', 'sidebar.html', 'sidebar-custom.html',
+     'author-profile.html', 'author-profile-custom-links.html'].forEach((f) => {
+      expect(fs.existsSync(path.join(ROOT, '_includes', f))).toBe(false);
+    });
+  });
+
+  test('assets/js의 모든 파일이 after_footer_scripts에서 로드된다', () => {
+    const config = readYaml('_config.yml');
+    const loaded = new Set(config.after_footer_scripts);
+    const jsFiles = fs.readdirSync(path.join(ROOT, 'assets/js')).filter((f) => f.endsWith('.js'));
+    expect(jsFiles.length).toBeGreaterThan(0);
+    jsFiles.forEach((f) => expect(loaded.has(`/assets/js/${f}`)).toBe(true));
+  });
+
+  test('스타일시트가 이제 테마 마크업용 선택자를 만들지 않는다', () => {
+    const files = fs.readdirSync(path.join(ROOT, '_sass/custom'))
+      .map((f) => readFileContent(path.join('_sass/custom', f))).join('\n');
+    // .page__footer-inner / -copyright 는 우리 footer.html이 직접 찍는
+    // 살아있는 클래스라 제외한다.
+    [/\.masthead\b/, /\.greedy-nav\b/, /\.sidebar\b/, /\.author__/,
+     /\.page__content\s*[{,]/, /\.archive__/, /\.page__footer\s*[{,]/,
+     /\.search-content\b/, /\.btn--/, /html\.dark-mode/].forEach((re) => {
+      expect(files).not.toMatch(re);
+    });
   });
 });
 

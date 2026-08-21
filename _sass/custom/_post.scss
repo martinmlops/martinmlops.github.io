@@ -1,0 +1,121 @@
+/* ── 포스트 헤더 ── */
+.post-head {
+  padding: 72px 0 40px;
+  border-bottom: 1px solid rgb(var(--line) / .4);
+  margin-bottom: 40px;
+}
+.eyebrow {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .13em;
+  text-transform: uppercase; color: rgb(var(--muted)); margin-bottom: 24px;
+}
+.eyebrow .ac { color: rgb(var(--accent)); font-weight: 700; }
+
+.post-title {
+  font-size: clamp(30px, 4vw, 46px); font-weight: 900;
+  line-height: 1.12; letter-spacing: -.03em;
+  color: rgb(var(--fg)); text-wrap: balance; margin: 0 0 18px;
+}
+.post-meta {
+  font-family: var(--font-mono); font-size: 11px;
+  color: rgb(var(--muted)); display: flex; gap: 8px; flex-wrap: wrap;
+}
+.post-meta .sep { opacity: .5; }
+
+.post-tags { margin-top: 56px; }
+
+/* ── 본문 폭: 문장형 요소만 읽기 좋은 폭으로, 나머지는 컬럼 전체 폭 ──
+   .post-body 자체는 캡을 두지 않는다(넓은 모니터 요구사항 유지) — 캡은
+   문단/목록/인용/제목처럼 "읽는" 요소에만 걸고, 표·코드블록·이미지·mermaid
+   같은 "보는" 블록은 컬럼 폭을 그대로 쓴다. margin은 건드리지 않으므로
+   양쪽 다 컬럼 왼쪽 끝에서 시작해 좌측 정렬이 자연히 맞는다. */
+.post-body > p,
+.post-body > ul,
+.post-body > ol,
+.post-body > dl,
+.post-body > blockquote,
+.post-body > h1,
+.post-body > h2,
+.post-body > h3,
+.post-body > h4,
+.post-body > h5,
+.post-body > h6 {
+  max-width: 42rem;
+}
+
+/* kramdown은 단독 이미지 한 줄을 <p><img></p>로 감싼다 — 이건 사진이지
+   글이 아니므로 컬럼 전체 폭을 쓴다.
+   또한 이미지 다음 줄에 빈 줄 없이 *캡션*을 적으면 kramdown이 이미지와
+   <em>캡션을 같은 <p> 안에 묶는다. 기본 흐름대로 두면 인라인 요소인 em이
+   이미지 옆 남는 폭에 끼어 들어가(고 넘치면 잘려) 보이므로, 이 문단은
+   세로로 쌓아 이미지 먼저·캡션은 그 아래·왼쪽 정렬로 강제한다. */
+.post-body > p:has(img) {
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.post-body > p:has(img) img {
+  display: block;
+}
+
+/* 캡션: 본문보다 작고, muted 톤, 이미지와 분리되도록 위쪽 여백을 둔다.
+   내부 링크(예: 출처 표기)는 별도 처리 없이 전역 a 규칙(accent 색)을 그대로 받는다. */
+.post-body > p:has(img) em {
+  display: block;
+  margin-top: 10px;
+  color: rgb(var(--muted));
+  font-size: 0.85em;
+  line-height: 1.5;
+}
+
+/* 표는 컬럼 전체 폭을 쓰되, 컬럼보다 넓어지면 페이지가 아니라 표 자체가
+   가로로 스크롤된다 (모바일 등 좁은 화면에서 특히 중요) */
+.post-body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page-head {
+  padding: 64px 0 32px;
+  border-bottom: 1px solid rgb(var(--line) / .4);
+  margin-bottom: 36px;
+}
+.page-title {
+  font-size: clamp(26px, 3.2vw, 38px); font-weight: 800;
+  line-height: 1.15; letter-spacing: -.025em;
+  color: rgb(var(--fg)); margin: 0;
+}
+.page-sub { margin-top: 10px; color: rgb(var(--muted)); font-size: 15px; }
+
+/* ── 홈 목록 ── */
+.post-list { list-style: none; margin: 0; padding: 0; }
+.post-card {
+  padding: 28px 0;
+  border-bottom: 1px solid rgb(var(--line) / .5);
+}
+.post-card .eyebrow { margin-bottom: 10px; }
+.post-card__title {
+  font-size: clamp(19px, 2vw, 24px); font-weight: 700;
+  line-height: 1.3; letter-spacing: -.02em; margin: 0 0 8px;
+}
+.post-card__title a { color: rgb(var(--fg)); text-decoration: none; }
+.post-card__title a:hover { color: rgb(var(--accent)); }
+.post-card__excerpt {
+  margin: 10px 0 0; color: rgb(var(--muted));
+  font-size: 14.5px; line-height: 1.65;
+}
+
+.pager {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; margin-top: 48px; padding-top: 20px;
+  border-top: 1px solid rgb(var(--line));
+}
+.pager a { font-size: 13px; color: rgb(var(--muted)); }
+.pager a:hover { color: rgb(var(--accent)); }
+.pager-status {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: .1em; color: rgb(var(--muted));
+}

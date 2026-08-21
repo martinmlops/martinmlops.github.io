@@ -1,6 +1,6 @@
 ---
 title: "Azure Terraform"
-layout: single
+layout: page
 permalink: /categories/terraform/azure-terraform/
 author_profile: true
 ---

@@ -12,27 +12,32 @@ timezone: Asia/Seoul
 # ──────────────────────────────────────────────
 # 테마 설정
 # ──────────────────────────────────────────────
-remote_theme: "mmistakes/minimal-mistakes@4.26.2"
-minimal_mistakes_skin: "air"   # 밝고 깔끔한 스킨 [air, aqua, contrast, dark, default, dirt, mint, neon, plum, sunrise]
+# 외부 테마를 쓰지 않는다. 레이아웃(_layouts)·셸(_includes)·스타일
+# (_sass/custom)을 전부 직접 갖고 있어서 remote_theme /
+# minimal_mistakes_skin / jekyll-remote-theme 를 제거했다.
 
 # ──────────────────────────────────────────────
 # 기능 설정
 # ──────────────────────────────────────────────
-search: true
-search_full_content: true
+# search / search_full_content 설정은 없다 — 테마 내장 lunr 검색 전용
+# 값이었고, 그 테마를 제거했다. 검색은 자체 구현이다:
+# _plugins/search_index.rb 가 만드는 /search-index.json +
+# assets/js/search-match.js · search.js (아래 after_footer_scripts).
+# search_index.rb 의 remove_theme_lunr_assets 는 테마가 복사해오던
+# assets/js/lunr/* 를 걸러내던 방어 코드로, 이제 걸러낼 것이 없다.
 
 # 수식 (MathJax)
 head_scripts:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
-# Mermaid 다이어그램
+# Mermaid 다이어그램 · 자체 검색 엔진
 after_footer_scripts:
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - /assets/js/mermaid-init.js
-  - /assets/js/sidebar-toggle.js
   - /assets/js/theme-toggle.js
-  - /assets/js/permalink-fix.js
-  - /assets/js/toc-active-fix.js
+  - /assets/js/mermaid-init.js
+  - /assets/js/contents-rail.js
+  - /assets/js/search-match.js
+  - /assets/js/search.js
 
 # ──────────────────────────────────────────────
 # 저자 정보
@@ -79,7 +84,6 @@ paginate_path: /page:num/
 # 플러그인
 # ──────────────────────────────────────────────
 plugins:
-  - jekyll-remote-theme
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-feed
@@ -89,36 +93,31 @@ plugins:
 # ──────────────────────────────────────────────
 # 기본값 설정
 # ──────────────────────────────────────────────
+# author_profile / share / related / toc / toc_sticky 는 minimal-mistakes
+# 레이아웃만 읽던 값이라 제거했다. 우리 레이아웃·인클루드 어디에서도
+# 참조하지 않는다(목차는 contents-rail.js가 .post-body를 훑어 만든다).
+# read_time 은 _layouts/post.html이 page.read_time을 읽으므로 남긴다.
 defaults:
   - scope:
       path: ""
       type: posts
     values:
-      layout: single
-      author_profile: true
+      layout: post
       read_time: true
       comments: true
-      share: true
-      related: true
-      toc: true
-      toc_sticky: true
       show_date: true
   - scope:
       path: "_pages"
       type: pages
     values:
-      layout: single
-      author_profile: true
+      layout: page
 
 # ──────────────────────────────────────────────
 # 카테고리/태그 아카이브
 # ──────────────────────────────────────────────
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+# category_archive / tag_archive 는 minimal-mistakes의 liquid 아카이브
+# 제너레이터 전용 키였다. /categories/ 와 /tags/ 는 _pages/categories.md ·
+# _pages/tags.md 가 site.categories · site.tags 로 직접 만들므로 제거했다.
 
 # ──────────────────────────────────────────────
 # Markdown / 코드 강조

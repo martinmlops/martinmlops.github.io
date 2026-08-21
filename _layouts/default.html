@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="{{ site.locale | default: 'ko-KR' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- seo -%}
+  {%- include head/custom.html -%}
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {%- feed_meta -%}
+</head>
+<body>
+  {%- include site-header.html -%}
+
+  <div class="layout">
+    {%- include contents-rail.html -%}
+    <main class="content" id="main">
+      {{ content }}
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    {%- include footer.html -%}
+  </footer>
+
+  {%- for src in site.after_footer_scripts -%}
+    <script src="{{ src | relative_url }}"></script>
+  {%- endfor -%}
+</body>
+</html>

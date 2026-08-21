@@ -1,6 +1,6 @@
 ---
 title: "클라우드 아이덴티티 및 접근 제어"
-layout: single
+layout: page
 permalink: /categories/azure/클라우드-아이덴티티/
 author_profile: true
 ---

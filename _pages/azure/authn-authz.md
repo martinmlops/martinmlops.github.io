@@ -1,6 +1,6 @@
 ---
 title: "인증 및 접근 제어"
-layout: single
+layout: page
 permalink: /categories/azure/인증-및-접근-제어/
 author_profile: true
 ---

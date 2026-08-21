@@ -1,6 +1,6 @@
 ---
 title: "Agent Engineering"
-layout: single
+layout: page
 permalink: /categories/tech-insights/agent-engineering/
 author_profile: true
 ---

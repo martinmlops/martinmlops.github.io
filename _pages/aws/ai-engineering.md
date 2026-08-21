@@ -1,6 +1,6 @@
 ---
 title: "AI Engineering"
-layout: single
+layout: page
 permalink: /categories/aws/ai-engineering/
 author_profile: true
 ---

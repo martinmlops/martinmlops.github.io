@@ -1,63 +1,33 @@
-document.addEventListener("DOMContentLoaded", function () {
-  var btn = document.getElementById("theme-toggle");
-  var icon = document.getElementById("theme-icon");
+(function () {
   var root = document.documentElement;
-  if (!btn) return;
 
-  if (localStorage.getItem("theme") === "dark") {
-    root.classList.add("dark-mode");
-    if (icon) icon.textContent = "🌙";
+  // 저장된 선택이 없으면(=data-theme 속성이 없으면) 항상 라이트로 취급한다.
+  // OS 선호로 폴백하지 않는다 — 방문자가 테마 버튼으로 명시적으로 고르기
+  // 전까지는 배경이 항상 흰색이어야 하고, 토글 버튼도 그 상태를 기준으로
+  // 다음 클릭이 무엇을 할지 판단해야 한다(그렇지 않으면 OS가 다크인 환경에서
+  // 화면은 라이트인데 버튼은 "다크에서 라이트로" 라고 착각해 반대로 토글된다).
+  function isDark() {
+    return root.getAttribute("data-theme") === "dark";
   }
 
-  btn.addEventListener("click", function () {
-    var isDark = root.classList.toggle("dark-mode");
-    if (icon) icon.textContent = isDark ? "🌙" : "☀️";
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+  function apply(dark) {
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch (e) {}
+    document.dispatchEvent(
+      new CustomEvent("themechange", { detail: { isDark: dark } })
+    );
+  }
 
-    // mermaid 다이어그램 다크모드 재렌더링
-    if (typeof mermaid !== "undefined") {
-      var vars = isDark
-        ? {
-            primaryColor: "#0d2a45",
-            primaryTextColor: "#f5f5f7",
-            primaryBorderColor: "#2997ff",
-            lineColor: "#5b8bc4",
-            secondaryColor: "#101f30",
-            tertiaryColor: "#15263a",
-            background: "#000000",
-            mainBkg: "#0d2a45",
-            nodeBorder: "#2997ff",
-            clusterBkg: "#101f30",
-            clusterBorder: "#1d5c99",
-            titleColor: "#f5f5f7",
-            edgeLabelBackground: "#1c1c1e",
-            nodeTextColor: "#f5f5f7",
-          }
-        : {
-            primaryColor: "#e5f0fb",
-            primaryTextColor: "#1d1d1f",
-            primaryBorderColor: "#0066cc",
-            lineColor: "#5b8bc4",
-            secondaryColor: "#f0f6fd",
-            tertiaryColor: "#f5f5f7",
-            background: "#ffffff",
-            mainBkg: "#e5f0fb",
-            nodeBorder: "#0066cc",
-            clusterBkg: "#f0f6fd",
-            clusterBorder: "#9ec4e8",
-            titleColor: "#1d1d1f",
-            edgeLabelBackground: "#ffffff",
-            nodeTextColor: "#1d1d1f",
-          };
-      mermaid.initialize({ startOnLoad: false, theme: "base", themeVariables: vars });
-      document.querySelectorAll(".mermaid").forEach(function (el) {
-        var src = el.getAttribute("data-mermaid-src");
-        if (src) {
-          el.removeAttribute("data-processed");
-          el.innerHTML = src;
-        }
+  window.blogTheme = { isDark: isDark, apply: apply };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var buttons = document.querySelectorAll(".theme-toggle");
+    Array.prototype.forEach.call(buttons, function (btn) {
+      btn.addEventListener("click", function () {
+        apply(!isDark());
       });
-      mermaid.run();
-    }
+    });
   });
-});
+})();

@@ -1,6 +1,6 @@
 ---
 title: "Compliance"
-layout: single
+layout: page
 permalink: /categories/terraform/compliance/
 author_profile: true
 ---
