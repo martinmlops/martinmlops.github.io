@@ -9,12 +9,11 @@
    함께 지운 SCSS 변수:
      $primary-color / $background-color — 테마 변수 !default 덮어쓰기 전용
      $x-large                           — 테마 브레이크포인트 전용
-   $max-width 는 _layout.scss의 푸터 폭이 아직 참조하므로 남겨 둔다. */
-$max-width: 1400px;
+     $max-width                         — _layout.scss 푸터 전용, 값은
+                                          _shell.scss에 1400px로 인라인 */
 
 @import "custom/tokens";
 @import "custom/base";
 @import "custom/components";
-@import "custom/layout";
 @import "custom/shell";
 @import "custom/post";

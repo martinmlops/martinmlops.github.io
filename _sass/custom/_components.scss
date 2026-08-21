@@ -1,8 +1,13 @@
 /* ── 재사용 컴포넌트 (세미나 HTML 이식) ─────────────────
-   사용법: 마크다운 안에서 <div class="..." markdown="1"> */
+   사용법: 마크다운 안에서 <div class="..." markdown="1">
+
+   원래 .page__content 하위로 스코프돼 있었는데, 그 컨테이너는 테마
+   레이아웃에서만 나오던 것이라 우리 셸에서는 아무 것도 매칭하지 않았다.
+   전부 명시적으로 붙이는 opt-in 클래스이므로 스코프를 떼어 어디서든
+   (post.html이 직접 찍는 .post-tags.chips 포함) 동작하게 한다. */
 
 /* 콜아웃 */
-.page__content .callout {
+.callout {
   display: flex;
   gap: 14px;
   align-items: flex-start;
@@ -19,7 +24,7 @@
 }
 
 /* 카드 + 그리드 */
-.page__content .card-grid {
+.card-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
@@ -30,7 +35,7 @@
   }
 }
 
-.page__content .card {
+.card {
   border: 1px solid rgb(var(--line));
   border-radius: 12px;
   padding: 24px;
@@ -61,14 +66,14 @@
 }
 
 /* 칩 */
-.page__content .chips {
+.chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin: 12px 0;
 }
 
-.page__content .chip {
+.chip {
   display: inline-flex;
   align-items: center;
   padding: 3px 11px;
@@ -80,7 +85,7 @@
 }
 
 /* 비교 (그린필드 vs 브라운필드 레이아웃) */
-.page__content .compare {
+.compare {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
@@ -91,8 +96,8 @@
   }
 }
 
-.page__content .compare-good,
-.page__content .compare-bad {
+.compare-good,
+.compare-bad {
   border-radius: 12px;
   padding: 22px;
   font-size: 14px;
@@ -112,7 +117,7 @@
   }
 }
 
-.page__content .compare-good {
+.compare-good {
   border: 1px solid rgb(var(--accent) / 0.45);
 
   li::before {
@@ -122,7 +127,7 @@
   }
 }
 
-.page__content .compare-bad {
+.compare-bad {
   border: 1px solid rgb(var(--line));
   color: rgb(var(--fg) / 0.75);
 
