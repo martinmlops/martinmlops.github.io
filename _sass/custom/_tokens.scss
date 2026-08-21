@@ -3,7 +3,17 @@
    다른 SCSS는 rgb(var(--…)) 형태로만 색을 참조한다.
    농담이 필요하면 새 색을 만들지 말고 알파로 합성한다:
      rgb(var(--accent) / .08)
-   예외는 rouge(코드 하이라이트) 팔레트뿐이다. */
+
+   예외는 딱 하나, rouge(코드 하이라이트) 팔레트다. _base.scss 끝의
+   ROUGE-EXCEPTION-START … ROUGE-EXCEPTION-END 마커 구간 안에서만 hex를
+   쓰며, 왜 알파 합성으로 대체할 수 없는지는 그 주석에 적어 뒀다.
+
+   스타일시트 밖의 예외로 assets/js/mermaid-init.js가 mermaid에 넘길 색을
+   직접 들고 있다. mermaid API는 리터럴 색만 받고, JS에서는 CSS 커스텀
+   프로퍼티가 해석되지 않기 때문이다 — 토큰 문자열을 넣으면 안 되고,
+   굳이 토큰을 읽어야 한다면 getComputedStyle로 읽어야 한다.
+
+   이 규칙들은 __tests__/shell.test.js 의 "색상 규칙" describe가 강제한다. */
 
 :root {
   --bg: 255 255 255;

@@ -111,12 +111,66 @@ describe('테마 토큰', () => {
   });
 });
 
-describe('색상 규칙 (신규 파일)', () => {
-  const NEW_SCSS = ['_sass/custom/_shell.scss', '_sass/custom/_post.scss'];
+describe('색상 규칙: _tokens.scss가 색을 정의하는 유일한 곳이다', () => {
+  const ROUGE_BLOCK =
+    /\/\* ROUGE-EXCEPTION-START[\s\S]*?ROUGE-EXCEPTION-END \*\//;
 
-  test.each(NEW_SCSS)('%s 에 hex 리터럴이 없다', (f) => {
-    const hex = (readFileContent(f).match(/#[0-9a-fA-F]{3,8}\b/g) || []);
+  // rouge(코드 하이라이트) 팔레트만 예외다 — 어두운 코드 배경 위 12색의
+  // 상호 대비가 목적이라 토큰 알파 합성으로 표현할 수 없다.
+  const stripRouge = (src) => src.replace(ROUGE_BLOCK, '');
+
+  const STYLE_FILES = [
+    '_sass/custom/_base.scss',
+    '_sass/custom/_components.scss',
+    '_sass/custom/_shell.scss',
+    '_sass/custom/_post.scss',
+    'assets/css/main.scss',
+  ];
+
+  test.each(STYLE_FILES)('%s 에 hex 리터럴이 없다 (rouge 예외 구간 제외)', (f) => {
+    const hex = stripRouge(readFileContent(f)).match(/#[0-9a-fA-F]{3,8}\b/g) || [];
     expect(hex).toEqual([]);
+  });
+
+  test.each(STYLE_FILES)('%s 에 리터럴 rgb()/rgba()/hsl() 값이 없다 (토큰 참조만 허용)', (f) => {
+    // 허용되는 형태는 rgb(var(--x)) / rgb(var(--x) / .n) 뿐이다.
+    const literal = stripRouge(readFileContent(f))
+      .match(/\brgba?\(\s*[\d.]|\bhsla?\(/g) || [];
+    expect(literal).toEqual([]);
+  });
+
+  test('rouge 예외 구간은 _base.scss 안에 마커로 격리돼 있고 팔레트를 담고 있다', () => {
+    const base = readFileContent('_sass/custom/_base.scss');
+    const block = base.match(ROUGE_BLOCK);
+    expect(block).not.toBeNull();
+    // 예외인 이유가 코드로 남아 있어야 한다
+    expect(block[0]).toMatch(/이유:/);
+    // 실제 구문 강조 팔레트가 이 안에 있다 (테마 제거로 사라지면 코드블록이 무채색이 된다)
+    expect(block[0]).toMatch(/\.highlight \.k\s*\{[^}]*#/);
+    expect(block[0]).toMatch(/div\.highlighter-rouge/);
+    // 마커 밖에는 rouge 색이 새어 나가면 안 된다
+    expect(stripRouge(base)).not.toMatch(/\.highlight \./);
+  });
+
+  test('_tokens.scss가 상태 토큰(--ok/--warn/--danger)을 라이트·다크 양쪽에 정의한다', () => {
+    const src = readFileContent('_sass/custom/_tokens.scss');
+    const root = src.slice(src.indexOf(':root {'), src.indexOf('}', src.indexOf(':root {')));
+    const dark = src.slice(src.indexOf('@mixin dark-tokens'), src.indexOf('}', src.indexOf('@mixin dark-tokens')));
+    ['--ok', '--warn', '--danger'].forEach((t) => {
+      expect(root).toMatch(new RegExp(`${t}:\\s*\\d`));
+      expect(dark).toMatch(new RegExp(`${t}:\\s*\\d`));
+    });
+  });
+
+  test('JS는 rgb(var(--…)) 문자열을 쓰지 않는다 (CSS 커스텀 프로퍼티는 JS 소비자에게 해석되지 않는다)', () => {
+    const glob = (dir) => fs.readdirSync(path.join(ROOT, dir))
+      .filter((f) => f.endsWith('.js'))
+      .map((f) => path.join(dir, f));
+    const jsFiles = glob('assets/js');
+    expect(jsFiles.length).toBeGreaterThan(0);
+    jsFiles.forEach((f) => {
+      expect(readFileContent(f)).not.toMatch(/rgba?\(\s*var\(--/);
+    });
   });
 });
 
