@@ -207,9 +207,14 @@ test('Property 8: 목차 생성 정확성', () => {
         expect(extracted[i].level).toBe(h.level);
         expect(extracted[i].text).toBe(h.text);
       });
+      // 목차는 더 이상 테마의 defaults `toc: true` 플래그로 켜지지 않는다.
+      // contents-rail.js가 .post-body의 헤딩을 훑어 레일의 #rail-toc에
+      // 직접 그린다 — 그 경로가 실제로 연결돼 있는지를 확인한다.
       const config = readYaml('_config.yml');
       const postDefaults = config.defaults.find(d => d.scope && d.scope.type === 'posts');
-      expect(postDefaults.values.toc).toBe(true);
+      expect(postDefaults.values.toc).toBeUndefined();
+      expect(config.after_footer_scripts).toContain('/assets/js/contents-rail.js');
+      expect(readFileContent('_includes/contents-rail.html')).toMatch(/id="rail-toc"/);
     }),
     { numRuns: 100 }
   );
@@ -275,7 +280,9 @@ test('Property 11: _config.yml 파싱 정확성', () => {
     title: safeString,
     url: fc.constantFrom('https://example.github.io', 'https://blog.example.com'),
     locale: fc.constantFrom('ko-KR', 'en-US', 'ja-JP'),
-    remote_theme: fc.constant('mmistakes/minimal-mistakes'),
+    // 예전에는 remote_theme를 왕복시켰다. 그 키는 사라졌으므로 지금도
+    // 실제로 존재하는 키(timezone)로 같은 성질을 검사한다.
+    timezone: fc.constantFrom('Asia/Seoul', 'UTC', 'America/New_York'),
   });
 
   fc.assert(
@@ -285,8 +292,14 @@ test('Property 11: _config.yml 파싱 정확성', () => {
       expect(parsed.title).toBe(configData.title);
       expect(parsed.url).toBe(configData.url);
       expect(parsed.locale).toBe(configData.locale);
-      expect(parsed.remote_theme).toBe(configData.remote_theme);
+      expect(parsed.timezone).toBe(configData.timezone);
     }),
     { numRuns: 100 }
   );
+
+  // 실제 _config.yml도 같은 키들을 온전히 갖고 있고, 테마 키는 없다
+  const real = readYaml('_config.yml');
+  expect(real.locale).toBe('ko-KR');
+  expect(real.timezone).toBe('Asia/Seoul');
+  expect(real.remote_theme).toBeUndefined();
 });
