@@ -1,18 +1,17 @@
 ---
 ---
 
-/* 애플 스타일 테마 (세미나 디자인 시스템 이식) */
-$primary-color: #0066cc;
-$background-color: #fff;
+/* ── 세미나 디자인 시스템 ──────────────────────────────────
+   minimal-mistakes 스킨/본체 @import를 제거했다. 모든 페이지가 자체
+   레이아웃(default·post·page·home)으로만 렌더되므로 테마 CSS가 만들던
+   규칙은 전부 아무 것도 매칭하지 않는 죽은 코드였다.
 
-/* 좌우 여백 축소 */
+   함께 지운 SCSS 변수:
+     $primary-color / $background-color — 테마 변수 !default 덮어쓰기 전용
+     $x-large                           — 테마 브레이크포인트 전용
+   $max-width 는 _layout.scss의 푸터 폭이 아직 참조하므로 남겨 둔다. */
 $max-width: 1400px;
-$x-large: 1400px;
 
-@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
-@import "minimal-mistakes";
-
-/* ── 세미나 디자인 시스템 ── */
 @import "custom/tokens";
 @import "custom/base";
 @import "custom/components";
